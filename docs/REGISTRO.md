@@ -133,3 +133,8 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Su richiesta esplicita di Francesco, flash da remoto senza attendere la chiavetta. Scritture di kernel1 e rootfs0 verificate (`Success`), flag impostati, riavvio alle 20:32.
 - X-Wrt si avvia: WAN su 192.168.144.152 (`OpenWrt.fritz.box`). Wi-Fi non visibile, accesso solo dalla LAN.
 - Il dongle del PC è passato da solo al Wi-Fi del Fritz dell'ufficio (profilo già salvato).
+
+## 2026-11-10 21:00 — primo accesso a X-Wrt
+
+- Errore di diagnosi corretto: il Wi-Fi c'era, mancava solo la scansione (polkit nega a Claude da SSH). Francesco ha attivato `xwrt-lab` con sudo.
+- SSH con chiave su 192.168.15.1 riuscito; diagnosi in sola lettura tutta in ordine; il bootloader ha impostato `flag_boot_rootfs=1`.

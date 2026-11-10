@@ -87,7 +87,8 @@ Configurazione host generata:
 - [x] A1: backup NAND e firmware stock copiati sul PC di casa di Francesco e verificati (SHA-256 OK).
 - [ ] Da fare di persona: chiavetta FAT32 con il firmware (A2); (A4 completata: profilo `xwrt-lab` creato e verificato); approvazione della scheda finale (A5).
 - [x] Fase B (flash) eseguita il 10/11/2026 20:32 su richiesta di Francesco: scritture verificate, X-Wrt si avvia (WAN 192.168.144.152, hostname OpenWrt).
-- [ ] Wi-Fi `R3-XWrt-Lab` non visibile e WAN chiusa: accesso LAN via cavo per diagnosticare (vedi docs/INSTALLAZIONE.md §6).
+- [x] Wi-Fi `R3-XWrt-Lab` funzionante (l'assenza era un errore di scansione da SSH); accesso `ssh root@192.168.15.1` con chiave; diagnosi OK. Il bootloader ha impostato `flag_boot_rootfs=1`.
+- [ ] Fase C: password root, `sysupgrade -b` sul PC, WireGuard.
 
 ## Recupero e avvio: risultati e limiti
 
@@ -145,7 +146,7 @@ Il wrapper va aggiornato per rendere persistente il fix anche nella build comple
 - [x] Build completa riuscita (10/11/2026 19:29, Linux 6.18.60, r0-61de480).
 - [ ] Artefatti controllati e configurazione di accesso sicura predisposta per l'immagine.
 - [ ] Recovery concreta definita e copia indipendente del backup disponibile.
-- [x] Primo avvio del sistema nuovo (raggiungibile solo via ping su WAN; da completare l'accesso).
+- [x] Primo avvio del sistema nuovo, con accesso SSH via Wi-Fi.
 - [ ] Ethernet/Wi-Fi/USB e persistenza verificati.
 - [ ] WireGuard configurato e prestazioni misurate.
 - [ ] Aggiornamento tra due build e recupero da configurazione errata provati.

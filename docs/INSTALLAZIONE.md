@@ -1,6 +1,6 @@
 # Piano di installazione e recupero — X-Wrt su Xiaomi R3
 
-**Stato: FASE B ESEGUITA il 10/11/2026 alle 20:32, da remoto, su richiesta esplicita di Francesco** (prima della chiavetta FAT32 e senza nessuno accanto al router). Esito: X-Wrt si avvia (vedi sotto); il Wi-Fi non compare ancora.
+**Stato: FASE B ESEGUITA il 10/11/2026 alle 20:32, da remoto, su richiesta esplicita di Francesco** (prima della chiavetta FAT32 e senza nessuno accanto al router). Esito: **riuscito**. X-Wrt si avvia, il Wi-Fi `R3-XWrt-Lab` funziona e c'è accesso SSH con chiave dalla LAN (vedi §6).
 
 ~~Stato: PROPOSTA, non eseguita.~~ Redatta il 10 novembre 2026 sulla base del backup e dei sorgenti. Nessun comando di questo documento è stato eseguito sul router. La fase B richiede un via libera esplicito di Francesco.
 
@@ -138,3 +138,14 @@ Lo script deve fermarsi senza scrivere se un hash non corrisponde.
 - Sequenza osservata: immagini scaricate, MD5 e dimensioni corrette; ambiente in RAM (busybox, mtd, curl) provato in `chroot`; `mtd write` + `mtd verify` su kernel1 → **Success**; flag `flag_last_success=1`, `boot_wait=on`, `uart_en=1`; dal `chroot` `mtd write` + `mtd verify` su rootfs0 → **Success**; `reboot -f`.
 - Dopo il riavvio: il router risponde al ping su **192.168.144.152** con il MAC WAN `f0:b4:29:f3:63:2d` (factory 0x28, come da `02_network` di X-Wrt). Il Fritz lo registra come **`OpenWrt.fritz.box`**, quindi **X-Wrt si è avviato**. La porta WAN risulta collegata alla LAN dell'ufficio.
 - Le porte TCP lato WAN rispondono con un rifiuto (firewall di OpenWrt; dropbear è limitato alla LAN per scelta). **Le reti `R3-XWrt-Lab` e `Xiaomi-R3-Lab` non sono visibili** dal dongle dopo oltre 10 minuti: la radio a 2,4 GHz non si è accesa, oppure la configurazione `board.d` non è stata applicata. Serve un accesso dal lato LAN per diagnosticare.
+
+### Correzione e primo accesso (21:00)
+
+- La conclusione «Wi-Fi non visibile» era **sbagliata**. Da SSH NetworkManager nega a Claude le scansioni (`not authorized`), quindi la lista letta era una cache vecchia. Con `sudo nmcli dev wifi rescan` Francesco ha visto `R3-XWrt-Lab` (BSSID `F0:B4:29:F3:63:2E`, canale 1, segnale 100, WPA2) e ha attivato il profilo `xwrt-lab`.
+- Accesso `ssh root@192.168.15.1` con chiave riuscito. Diagnosi in sola lettura con `scripts/diag_xwrt.sh` (rapporto in `private/xwrt-diag-20261110-2100.txt`):
+  - OpenWrt/X-Wrt r0-61de480, Linux 6.18.60;
+  - mtd come da DTS X-Wrt (`kernel_stock`, `kernel`, `ubi` da 118 MiB); UBI con volumi `rootfs` (3,7 MiB) e `rootfs_data` (107,6 MiB), 0 PEB danneggiati; overlay con 92,8 MB liberi;
+  - **`flag_boot_rootfs=1` impostato dal bootloader**, con `flag_last_success=1`: conferma diretta che il flag seleziona il System 2 (kernel1);
+  - `board.json` contiene i default Wi-Fi del laboratorio; radio 2,4 GHz (rt2800, `phy1-ap0`) attiva in AP; radio 5 GHz (mt76x2e) riconosciuta e spenta;
+  - WAN in DHCP dal Fritz (192.168.144.152), LAN 192.168.15.1.
+- Fase C da completare: password root, backup della configurazione (`sysupgrade -b`), WireGuard.
