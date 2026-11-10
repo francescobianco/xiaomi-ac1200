@@ -5,7 +5,7 @@
   "profile": "xiaomi_miwifi-r3",
   "feeds_installed": false,
   "configuration": "configs/r3-lab.expanded.config",
-  "configuration_sha256": "fe7fe088adb4bb06790e9ec5d6b0a95df8eaa27c18da3b5aae3a4a67312d958c",
+  "configuration_sha256": "1ea64299355b15d06d3cab3d1ed39396e1fb47695a5a37a3d9812b5ff4c887bd",
   "source_files_sha256": {
     "target/linux/ramips/dts/mt7620a_xiaomi_miwifi-r3.dts": "c9158f4b24ede79bb5a18c0d4dc0f4a9fa8c27f408e02591677ad5a8dc5dac97",
     "target/linux/ramips/files/drivers/mtd/maps/ralink_nand.c": "fc1d63ea164bbfc7243e8b3a63d60d63d0921291941b3d82dc29d3b8cef92c62",

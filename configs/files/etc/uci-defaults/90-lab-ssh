@@ -1,0 +1,10 @@
+#!/bin/sh
+# Laboratorio R3: SSH solo con chiave e solo dalla LAN.
+# La chiave pubblica viene inserita al momento della build da private/router_authorized_keys.
+uci -q batch <<'UCI'
+set dropbear.@dropbear[0].PasswordAuth='off'
+set dropbear.@dropbear[0].RootPasswordAuth='off'
+set dropbear.@dropbear[0].Interface='lan'
+commit dropbear
+UCI
+exit 0

@@ -1,4 +1,20 @@
-# RECAP — ripresa sessione da remoto (10 novembre 2026, aggiornato 19:31)
+# RECAP — ripresa sessione da remoto (10 novembre 2026, aggiornato 19:38)
+
+> **AGGIORNAMENTO 19:45 — SECONDA BUILD RIUSCITA (exit 0 alle 19:41) e verificata; documentazione, commit e push fatti.**
+> Prossimo passo: piano di installazione e recupero (TODO.md). Nessun flash eseguito.
+>
+> Storico della seconda build (WireGuard + chiave SSH + Image Builder):
+> Decisione di Francesco: aggiungere WireGuard, accesso SSH con chiave e Image Builder; LuCI per ora no.
+> - Avviata alle 19:36 **staccata da Claude** (`setsid nohup`, `-j12`): sopravvive alla chiusura delle sessioni.
+>   Log: `work/build-wg.log`; a fine build l'ultima riga è `exit=N`. Controllo: `pgrep -af 'make -j12'`.
+> - Seed aggiornato (`kmod-wireguard`, `wireguard-tools`, `CONFIG_IB=y`); config espansa e hash nel lock aggiornati.
+>   La differenza rispetto alla build precedente comprende solo WireGuard, le sue dipendenze crypto/udptunnel e IB.
+> - Overlay immagine: `configs/files/etc/uci-defaults/90-lab-ssh` (dropbear senza password, solo LAN) e
+>   la chiave pubblica `private/router_authorized_keys` (copia di `~/.ssh/id_rsa.pub`, RSA 3072, fuori da Git).
+>   `scripts/build_lab.sh` ricrea `work/x-wrt/files/` a ogni build e si rifiuta di partire senza chiave.
+> - LAN predefinita di X-Wrt: **192.168.15.1**. **Decisione di Francesco: mantenerla** (organizzazione degli indirizzi), non cambiarla.
+> - Dopo la build: verificare immagini, WireGuard nel manifest, presenza di authorized_keys e uci-defaults nel
+>   rootfs e dell'Image Builder; poi documentazione, commit e push. Nessun flash.
 
 > **AGGIORNAMENTO 19:31 — BUILD COMPLETATA CON SUCCESSO (`exit=0`, finita alle 19:29).**
 > La sessione dell'ufficio non ha più make attive: l'istanza di casa può prendere in mano tutto.

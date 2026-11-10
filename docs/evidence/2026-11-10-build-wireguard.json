@@ -1,0 +1,38 @@
+{
+  "build_completed": true,
+  "started_at": "2026-11-10T19:36:00+01:00",
+  "finished_at": "2026-11-10T19:41:00+01:00",
+  "make_exit_code": 0,
+  "make_jobs": 12,
+  "log": "work/build-wg.log",
+  "source": "x-wrt 61de4809b444b7a3d3c0a9cc27c1e0d6702572e4",
+  "kernel": "Linux 6.18.60",
+  "configuration_sha256": "1ea64299355b15d06d3cab3d1ed39396e1fb47695a5a37a3d9812b5ff4c887bd",
+  "added": ["kmod-wireguard 6.18.60-r1", "wireguard-tools 1.0.20260223-r2", "CONFIG_IB=y"],
+  "manifest_packages": 116,
+  "checksums_file": "configs/build-2026-11-10-wg.sha256sums",
+  "manifest_file": "configs/build-2026-11-10-wg.manifest",
+  "sha256sums_check": "all OK",
+  "images": {
+    "squashfs-kernel1.bin": {"bytes": 2745655, "uimage_MiB": 2.62, "fits_4MiB_slot": true, "header_crc": "OK", "data_crc": "OK"},
+    "initramfs-kernel.bin": {"bytes": 6426535, "uimage_MiB": 6.13, "fits_4MiB_slot": false, "header_crc": "OK", "data_crc": "OK"},
+    "squashfs-sysupgrade.bin": {"bytes": 6574343},
+    "squashfs-factory.bin": {"bytes": 9175040},
+    "squashfs-breed-factory.bin": {"bytes": 13369344},
+    "squashfs-rootfs0.bin": {"bytes": 4980736},
+    "imagebuilder": {"file": "openwrt-imagebuilder-ramips-mt7620.Linux-x86_64.tar.zst", "bytes": 38356409, "archive_readable": true}
+  },
+  "rootfs_checks_from_sysupgrade": {
+    "etc/dropbear/authorized_keys": "presente, 0600, identica a private/router_authorized_keys (RSA 3072, SHA256:2z/KGuLHLVIdjdnP0CDCI5EjQoiCcXnLzM29Bav7IzM)",
+    "etc/uci-defaults/90-lab-ssh": "presente (PasswordAuth off, RootPasswordAuth off, Interface lan)",
+    "usr/bin/wg": "presente",
+    "lib/modules/6.18.60/wireguard.ko": "presente",
+    "lan_default_ipaddr": "192.168.15.1"
+  },
+  "flashed": false,
+  "limitations": [
+    "Nessuna prova su hardware; l'effetto di uci-defaults e' verificato solo staticamente.",
+    "Password root non impostata: l'accesso dipende dalla chiave SSH e dalla console fisica.",
+    "Piano di installazione e recupero non ancora definito."
+  ]
+}

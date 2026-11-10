@@ -91,3 +91,10 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Checksum e manifest copiati in `configs/`, evidenze in `docs/evidence/2026-11-10-build-artifacts.json`.
 - Nessuna comunicazione con il router, nessun flash, riavvio o modifica NVRAM.
 - Prossimo passo: decidere le aggiunte all'immagine e definire il piano di installazione e recupero.
+
+## 2026-11-10 sera — build con WireGuard e SSH con chiave
+
+- Decisioni di Francesco: WireGuard, chiave SSH e Image Builder sì; LuCI no per ora; LAN 192.168.15.1 da mantenere.
+- Seed e lock aggiornati; overlay `configs/files/` e chiave da `private/` inseriti dal wrapper.
+- Build `-j12` staccata dalla sessione: exit 0 alle 19:41. Immagini, rootfs e Image Builder verificati (evidenze in `docs/evidence/2026-11-10-build-wireguard.json`).
+- Nessuna comunicazione con il router, nessun flash.

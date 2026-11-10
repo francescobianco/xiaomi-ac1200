@@ -66,3 +66,16 @@ Build completa ripresa: **exit 0** il 10 novembre 2026 alle 19:29, circa 16 minu
 | `squashfs-factory.bin`, `breed-factory.bin`, `rootfs0.bin` | prodotte, compatibilità non verificata |
 
 Il manifest elenca 107 pacchetti: dropbear, wpad-basic-mbedtls, mt76x2, USB2. LuCI e WireGuard non sono inclusi. Dettagli in [evidence/2026-11-10-build-artifacts.json](evidence/2026-11-10-build-artifacts.json). **Nessuna immagine è stata installata**: prima servono le aggiunte (WireGuard, accesso SSH con chiave) e il piano di installazione e recupero.
+
+
+## Seconda build: WireGuard, SSH con chiave, Image Builder
+
+Decisione di Francesco: aggiungere WireGuard, accesso SSH con chiave e Image Builder; LuCI per ora no. LAN del nuovo sistema: 192.168.15.1, il valore predefinito di X-Wrt, da mantenere.
+
+- Seed: `CONFIG_PACKAGE_kmod-wireguard=y`, `CONFIG_PACKAGE_wireguard-tools=y`, `CONFIG_IB=y`. Dopo `defconfig`, la differenza rispetto alla configurazione precedente comprende solo questi pacchetti, le loro dipendenze crypto/udptunnel e `CONFIG_IB_STANDALONE`. Lock aggiornato.
+- Overlay `files/`: `configs/files/` (versionato) contiene `etc/uci-defaults/90-lab-ssh`, che disattiva le password di dropbear e lo limita alla LAN. `scripts/build_lab.sh` ricrea `work/x-wrt/files/` a ogni build e inserisce `etc/dropbear/authorized_keys` da `private/router_authorized_keys` (fuori da Git). Senza chiave il wrapper si ferma.
+- Build: `setsid nohup bash scripts/build_lab.sh -j12 > work/build-wg.log 2>&1`, exit 0 in circa 5 minuti.
+- Verifiche: sha256sums OK; kernel1 di 2,62 MiB con CRC OK; initramfs di 6,13 MiB con CRC OK; 116 pacchetti, tra cui `kmod-wireguard` e `wireguard-tools`. Dal rootfs della sysupgrade risultano presenti chiave (0600, identica all'originale), uci-defaults, `wg`, `wireguard.ko` e LAN 192.168.15.1. Archivio Image Builder leggibile (`openwrt-imagebuilder-ramips-mt7620.Linux-x86_64.tar.zst`).
+- Dettagli in [evidence/2026-11-10-build-wireguard.json](evidence/2026-11-10-build-wireguard.json), con [checksum](../configs/build-2026-11-10-wg.sha256sums) e [manifest](../configs/build-2026-11-10-wg.manifest).
+
+Nessuna immagine è stata installata. La password root non è impostata: l'accesso dipende dalla chiave SSH.

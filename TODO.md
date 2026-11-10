@@ -75,9 +75,11 @@ Configurazione host generata:
 - [x] Immagini verificate (dettagli in RECAP.md): sha256sums OK; kernel1 di 2,62 MiB con CRC OK; initramfs di 6,06 MiB (solo avvio da RAM); 107 pacchetti, senza LuCI né WireGuard. Nessun flash.
 - [x] TODO, BUILD.md, REGISTRO.md e README aggiornati con l'esito effettivo; checksum e manifest in `configs/`.
 
+**Decisioni prese:** immagine con WireGuard, SSH solo con chiave e Image Builder; LuCI per ora no. LAN del nuovo sistema: **192.168.15.1**, da mantenere.
+
 ### Prossimi passi (da concordare con Francesco)
 
-- [ ] Decidere le aggiunte all'immagine: WireGuard (`wireguard-tools`, `kmod-wireguard`), chiave SSH autorizzata, password root, eventuale LuCI. Valutare Image Builder/ccache e `-j12`.
+- [x] Immagine con WireGuard, SSH solo con chiave (dalla LAN) e Image Builder: build `-j12` riuscita alle 19:41 e verificata (`docs/evidence/2026-11-10-build-wireguard.json`). Restano da valutare password root e ccache.
 - [ ] Piano di installazione e recupero: quale immagine e quale layout (UBI standard o variante slot1), fallback dello stock, copia indipendente del backup.
 
 ## Recupero e avvio: risultati e limiti
