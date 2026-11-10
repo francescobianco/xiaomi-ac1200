@@ -35,6 +35,36 @@ sync_files() {
     cp -a -- "$project_root/configs/files" "$dest"
     install -d -m 700 "$dest/etc/dropbear"
     install -m 600 "$keys" "$dest/etc/dropbear/authorized_keys"
+
+    # Wi-Fi 2,4 GHz acceso al primo avvio (WPA2), così il dongle del PC
+    # raggiunge il router senza cavo. SSID e password da private/ (fuori da Git).
+    local wifi="$project_root/private/router_wifi.conf"
+    if [[ ! -s "$wifi" ]]; then
+        echo "ERRORE: manca $wifi (WIFI_SSID e WIFI_KEY)." >&2
+        exit 1
+    fi
+    local WIFI_SSID WIFI_KEY
+    WIFI_SSID=$(sed -n 's/^WIFI_SSID=//p' "$wifi")
+    WIFI_KEY=$(sed -n 's/^WIFI_KEY=//p' "$wifi")
+    if [[ ! "$WIFI_SSID" =~ ^[A-Za-z0-9_-]{1,32}$ || ! "$WIFI_KEY" =~ ^[A-Za-z0-9]{12,63}$ ]]; then
+        echo "ERRORE: WIFI_SSID o WIFI_KEY non validi in $wifi." >&2
+        exit 1
+    fi
+    install -d -m 755 "$dest/etc/board.d"
+    (
+        umask 077
+        cat > "$dest/etc/board.d/99-lab-wifi" <<EOF
+#!/bin/sh
+# Generato da scripts/build_lab.sh: default Wi-Fi del laboratorio.
+. /lib/functions/uci-defaults.sh
+board_config_update
+ucidef_set_country IT
+ucidef_set_wireless 2g '$WIFI_SSID' psk2 '$WIFI_KEY'
+board_config_flush
+exit 0
+EOF
+    )
+    chmod 700 "$dest/etc/board.d/99-lab-wifi"
 }
 
 case "${1:-}" in

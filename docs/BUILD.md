@@ -79,3 +79,9 @@ Decisione di Francesco: aggiungere WireGuard, accesso SSH con chiave e Image Bui
 - Dettagli in [evidence/2026-11-10-build-wireguard.json](evidence/2026-11-10-build-wireguard.json), con [checksum](../configs/build-2026-11-10-wg.sha256sums) e [manifest](../configs/build-2026-11-10-wg.manifest).
 
 Nessuna immagine è stata installata. La password root non è impostata: l'accesso dipende dalla chiave SSH.
+
+## Terza build: Wi-Fi del laboratorio al primo avvio
+
+Il Wi-Fi di X-Wrt parte spento e il PC non ha un secondo cavo libero. Il wrapper ora genera `files/etc/board.d/99-lab-wifi` da `private/router_wifi.conf` (SSID `R3-XWrt-Lab`, password casuale di 24 caratteri, fuori da Git). Lo script usa `ucidef_set_wireless 2g ... psk2` e `ucidef_set_country IT`: `board_detect` lo esegue prima che venga generata la configurazione Wi-Fi, quindi la radio a 2,4 GHz nasce accesa in WPA2 sulla `lan`, mentre quella a 5 GHz resta spenta.
+
+Build `-j12` riuscita alle 20:11 (`work/build-wifi.log`): sha256sums OK, kernel1 identico (CRC OK), rootfs con script Wi-Fi, chiave SSH, regola dropbear e WireGuard. Hash in `configs/build-2026-11-10-wifi.sha256sums`.

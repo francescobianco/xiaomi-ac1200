@@ -1,0 +1,23 @@
+{
+  "file": "miwifi_r3_firmware_4accc_2.26.39.bin",
+  "source": "https://bigota.miwifi.com/xiaoqiang/rom/r3/miwifi_r3_firmware_4accc_2.26.39.bin",
+  "url_found_via": "https://mirom.ezbox.idv.tw/en/miwifi/R3/roms-stable/",
+  "downloaded": "2026-11-10",
+  "local_path": "work/stock-firmware/ (fuori da Git)",
+  "bytes": 34239112,
+  "md5": "bfe892285be3d38eaf71060d19f4accc",
+  "sha256": "7fa55819185511dc13ff0cc977b927182ab17bf31fcb7b26bbe2a5e7d5c9bda1",
+  "md5_suffix_matches_filename_tag_4accc": true,
+  "version": "2.26.39 (uguale a quella installata)",
+  "format": "HDR1, modello 7, CRC32 dell'header valido (invertito, byte 12..fine)",
+  "segments": ["xiaoqiang_version (532 B)", "uImage.bin (2256547 B)", "root.ubi (31981568 B)"],
+  "contains_uboot": false,
+  "kernel_segment_identical_to_backup_kernel0": true,
+  "signature": {
+    "algorithm": "RSA-2048 PKCS#1 v1.5, SHA-1",
+    "signed_range": "byte 12 .. offset firma (0x20a7178)",
+    "public_key": "usr/share/xiaoqiang/public.pem dall'initramfs del kernel0 stock",
+    "valid": true
+  },
+  "recovery_effect": "usb_recovery.sh scriverebbe kernel0, kernel1, rootfs0 e rootfs1 (ubiformat); niente bootloader perche' assente; cancella overlay e azzera i flag"
+}

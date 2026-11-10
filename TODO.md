@@ -82,7 +82,9 @@ Configurazione host generata:
 - [x] Immagine con WireGuard, SSH solo con chiave (dalla LAN) e Image Builder: build `-j12` riuscita alle 19:41 e verificata (`docs/evidence/2026-11-10-build-wireguard.json`). Restano da valutare password root e ccache.
 - [x] Piano di installazione e recupero scritto: **docs/INSTALLAZIONE.md** (PROPOSTA). Scoperta: la recovery USB Xiaomi sta nell'initramfs del kernel stock (reset all'avvio + chiavetta con firmware firmato), non nel bootloader; Config è un ambiente U-Boot modificabile con fw_setenv. Via proposta: kernel1 + rootfs0, kernel0 stock preservato.
 - [x] A3 verifiche in sola lettura sul router: `flag_last_success` = indice dell'ultimo sistema avviato con successo (1 → kernel1); reset su GPIO 30; 0 blocchi danneggiati su rootfs0 e overlay; `md5sum` e `mtd verify` disponibili, `sha256sum` no.
-- [ ] Resto della fase A: copia indipendente del backup (A1), firmware ufficiale firmato su chiavetta (A2), profilo di rete 192.168.15.x (A4), scheda finale approvata (A5).
+- [x] A2: firmware ufficiale 2.26.39 scaricato e verificato (firma RSA valida, kernel uguale al backup).
+- [x] A4 lato immagine: Wi-Fi 2,4 GHz WPA2 acceso al primo avvio (`R3-XWrt-Lab`, password in `private/router_wifi.conf`); terza build verificata.
+- [ ] Da fare di persona o con sudo: copia indipendente del backup e del firmware stock (A1); chiavetta FAT32 con il firmware (A2); `sudo bash scripts/setup_pc_xwrt_network.sh` (A4); approvazione della scheda finale (A5).
 - [ ] Fase B (flash) solo dopo il via libera di Francesco.
 
 ## Recupero e avvio: risultati e limiti

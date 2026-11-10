@@ -3,6 +3,7 @@
 > **AGGIORNAMENTO 19:45 — SECONDA BUILD RIUSCITA (exit 0 alle 19:41) e verificata; documentazione, commit e push fatti.**
 > **19:55 — Piano di installazione e recupero scritto in `docs/INSTALLAZIONE.md` (proposta).** Nessun flash eseguito.
 > **20:05 — A3 fatta (sola lettura sul router):** semantica dei flag confermata dagli script stock; dettagli in `docs/INSTALLAZIONE.md`. Restano A1, A2, A4, A5.
+> **20:15 — A2 e A4 fatte per la parte possibile da remoto.** Firmware stock 2.26.39 scaricato e verificato (firma RSA valida). Immagine ricompilata con il Wi-Fi a 2,4 GHz acceso (`R3-XWrt-Lab`). Restano da fare di persona o con sudo: copia del backup su un supporto esterno, chiavetta FAT32 con il firmware, `sudo bash scripts/setup_pc_xwrt_network.sh`, approvazione della scheda.
 >
 > Storico della seconda build (WireGuard + chiave SSH + Image Builder):
 > Decisione di Francesco: aggiungere WireGuard, accesso SSH con chiave e Image Builder; LuCI per ora no.

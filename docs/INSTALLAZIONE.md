@@ -45,13 +45,15 @@ Lo stock **non sarà più avviabile** come sistema, perché rootfs0 viene sovras
 
 Un Device Tree con UBI confinata a rootfs1 conserverebbe anche rootfs0 e permetterebbe di riavviare lo stock con un flag. Richiede però una patch al DTS, una gestione dei sysupgrade su misura e nessuno l'ha mai provata. Il vantaggio è marginale, perché il ritorno allo stock è già garantito dalla recovery USB. La teniamo come alternativa se il punto 3.A3 smentisse le ipotesi.
 
-### Immagini (build del 10/11/2026 19:41, `configs/build-2026-11-10-wg.sha256sums`)
+### Immagini (build del 10/11/2026 20:11 con Wi-Fi del laboratorio, `configs/build-2026-11-10-wifi.sha256sums`)
 
 | File | Destinazione | SHA-256 |
 | --- | --- | --- |
-| `openwrt-ramips-mt7620-xiaomi_miwifi-r3-squashfs-kernel1.bin` (2,62 MiB) | `kernel1` | `1a38c2e02d55c9c13869be7a584f6ef88444fa462f80a49133aab574adcbcdf4` |
-| `openwrt-ramips-mt7620-xiaomi_miwifi-r3-squashfs-rootfs0.bin` (4,75 MiB) | `rootfs0` | `d7d1a0996fb7478c7f4d3b7bd73509006987f0f320db19902559dc7d1e2ab4c7` |
-| `...-squashfs-sysupgrade.bin` | aggiornamenti successivi da X-Wrt | `21faeb8ac4b0ad86038be4c80918d49d124e60591b23439e12ac92ce2365dac6` |
+| `openwrt-ramips-mt7620-xiaomi_miwifi-r3-squashfs-kernel1.bin` (2,62 MiB) | `kernel1` | `1a38c2e02d55c9c13869be7a584f6ef88444fa462f80a49133aab574adcbcdf4` (MD5 `40b6070da3ac5f70f3923ed9a9dd4a9b`) |
+| `openwrt-ramips-mt7620-xiaomi_miwifi-r3-squashfs-rootfs0.bin` (4,75 MiB) | `rootfs0` | `d46a6a2bd5c381eac9a7a9f8b5b9f06a97e87800eb51da90dc4053677214ebc8` (MD5 `8ba5be646d74bb5023c53b3985453841`) |
+| `...-squashfs-sysupgrade.bin` | aggiornamenti successivi da X-Wrt | `58f69e6154e64689a1a3edf7cec08fdcad035fa0b623b14e3bd30ee4782b5ba9` |
+
+L'MD5 serve per il controllo sul router, dove `sha256sum` non esiste. Rispetto alla build delle 19:41 il kernel1 è identico; cambia solo il rootfs, per lo script Wi-Fi. Il manifest dei pacchetti è invariato.
 
 Non si usano `factory.bin` (formato non accettato dal pannello Xiaomi) né `breed-factory.bin` (richiede il bootloader Breed, che non installiamo).
 
@@ -60,14 +62,18 @@ Non si usano `factory.bin` (formato non accettato dal pannello Xiaomi) né `bree
 ### Fase A — preparazione, nessuna modifica al router
 
 - [ ] **A1. Seconda copia del backup** su un supporto indipendente (chiavetta, disco esterno o NAS), poi verifica con `sha256sum -c`.
-- [ ] **A2. Firmware ufficiale R3 firmato** (`miwifi_r3_all_*.bin`, preferibilmente la 2.26.39 attualmente installata o una versione stabile ufficiale), scaricato dal CDN Xiaomi, con hash registrato. Chiavetta FAT32 con una sola partizione e il file `.bin` nella radice, pronta e conservata accanto al router.
+- [x] **A2. Firmware ufficiale R3 firmato**: scaricato `miwifi_r3_firmware_4accc_2.26.39.bin` (la versione installata) dal server OTA Xiaomi, salvato in `work/stock-firmware/` con hash in `configs/stock-firmware.sha256`. Verifiche: CRC dell'header valido; kernel identico byte per byte al kernel0 del backup; **firma RSA-2048/SHA-1 valida** con la chiave pubblica dello stock (lo stesso controllo della recovery); nessun `uboot.bin` all'interno. Evidenze in [evidence/2026-11-10-stock-firmware.json](evidence/2026-11-10-stock-firmware.json).
+  - [ ] Resta da preparare la **chiavetta**: FAT32, una sola partizione, il file `.bin` nella radice. Va fatto di persona.
 - [x] **A3. Verifiche in sola lettura sul router stock** (10/11/2026; `scripts/read_install_checks.sh` e `scripts/read_boot_logic.sh`; evidenze in [evidence/2026-11-10-install-readonly-checks.json](evidence/2026-11-10-install-readonly-checks.json)). Nessuna modifica al router.
   - **Flag:** a ogni avvio riuscito `/usr/sbin/boot_check` imposta `flag_last_success` all'indice del sistema avviato (0 = kernel0/rootfs0, 1 = kernel1/rootfs1) e azzera `flag_try_sys*_failed`. `flag_try_sysN_failed` viene messo a 1 dall'initramfs (rootfs non montabile) e da `key_services_boot_check` (servizi falliti). `flag_boot_rootfs` viene solo letto dagli script userspace: lo scrive il bootloader in base al sistema che avvia. Quindi **`flag_last_success=1` → il bootloader sceglie il System 2 (kernel1)**, coerente con la ricetta X-Wrt. La logica interna di U-Boot non è stata disassemblata: resta un'inferenza forte, non una prova.
   - **Reset:** GPIO 30, valore 1 a tasto rilasciato (premuto = 0, come atteso dalla recovery).
   - **Blocchi danneggiati:** 0 su rootfs0 e su overlay (UBI). rootfs1 non verificato perché lo stock non lo monta.
   - **Strumenti sul router:** `mtd` (con `write` e `verify`), `md5sum`, `nanddump`, `flash_erase`, `ubiformat`, `curl`, `wget`. **`sha256sum` assente**: sul router si verifica con MD5, sul PC con SHA-256.
   - **Spazio:** 59 MB liberi in `/tmp`, sufficienti per le due immagini (7,4 MB).
-- [ ] **A4. Rete del PC**: profilo NetworkManager per 192.168.15.0/24 sul dongle o sul cavo (es. 192.168.15.10, senza route predefinita), pronto per il primo avvio.
+- [ ] **A4. Accesso al primo avvio senza cavo.** Il Wi-Fi di X-Wrt parte spento e il PC ha un solo cavo, quello di Internet e della VPN. Quindi:
+  - [x] nell'immagine, `/etc/board.d/99-lab-wifi` (generato dal wrapper con SSID e password da `private/router_wifi.conf`) accende **solo la radio a 2,4 GHz** in WPA2, sulla rete `lan`, paese IT. Il dongle del PC va solo a 2,4 GHz;
+  - [ ] sul PC, profilo `xwrt-lab` (dongle, 192.168.15.10/24, senza gateway né DNS, autoconnessione): **`sudo bash scripts/setup_pc_xwrt_network.sh`**. Da SSH polkit nega la creazione, quindi va lanciato da Francesco;
+  - 192.168.15.0/24 non è in conflitto con le reti del PC (Docker compreso).
 - [ ] **A5. Scheda finale** con immagini, hash, flag e comandi esatti, approvata da Francesco.
 
 ### Fase B — installazione (solo dopo il via libera)

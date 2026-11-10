@@ -113,3 +113,11 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - `boot_check` imposta `flag_last_success` all'indice del sistema avviato; `flag_boot_rootfs` lo scrive solo il bootloader. Ne segue che `flag_last_success=1` seleziona kernel1.
 - Reset su GPIO 30; 0 blocchi danneggiati su rootfs0 e overlay; `sha256sum` assente (si useranno `md5sum` e `mtd verify`).
 - Nessun nvram set/commit, nessuna scrittura mtd, nessun riavvio.
+
+## 2026-11-10 sera — firmware stock per la recovery e Wi-Fi nell'immagine
+
+- Scaricato il firmware ufficiale `miwifi_r3_firmware_4accc_2.26.39.bin` dal server OTA Xiaomi: firma RSA valida con la chiave dello stock, kernel identico al kernel0 del backup, nessun bootloader dentro. File in `work/stock-firmware/`, hash in `configs/stock-firmware.sha256`, evidenze in `docs/evidence/2026-11-10-stock-firmware.json`.
+- L'API del router per gli aggiornamenti non dava link (il router non ha WAN); il nome del file viene da un elenco pubblico dei link OTA ufficiali.
+- Aggiunta all'immagine la radio a 2,4 GHz accesa in WPA2 al primo avvio, per raggiungere il router dal dongle. Terza build riuscita e verificata.
+- Profilo NetworkManager `xwrt-lab`: polkit nega la creazione da SSH, preparato `scripts/setup_pc_xwrt_network.sh` da lanciare con sudo.
+- Nessuna modifica al router.
