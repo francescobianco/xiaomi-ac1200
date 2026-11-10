@@ -88,7 +88,8 @@ Configurazione host generata:
 - [ ] Da fare di persona: chiavetta FAT32 con il firmware (A2); (A4 completata: profilo `xwrt-lab` creato e verificato); approvazione della scheda finale (A5).
 - [x] Fase B (flash) eseguita il 10/11/2026 20:32 su richiesta di Francesco: scritture verificate, X-Wrt si avvia (WAN 192.168.144.152, hostname OpenWrt).
 - [x] Wi-Fi `R3-XWrt-Lab` funzionante (l'assenza era un errore di scansione da SSH); accesso `ssh root@192.168.15.1` con chiave; diagnosi OK. Il bootloader ha impostato `flag_boot_rootfs=1`.
-- [ ] Fase C: password root, `sysupgrade -b` sul PC, WireGuard.
+- [x] Fase C: password root impostata (in `private/credentials.json`), SSH solo con chiave verificato, backup `sysupgrade -b` in `backups/xwrt-config/`.
+- [ ] WireGuard: decidere server o client, configurare, misurare.
 
 ## Recupero e avvio: risultati e limiti
 

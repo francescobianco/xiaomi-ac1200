@@ -138,3 +138,8 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 
 - Errore di diagnosi corretto: il Wi-Fi c'era, mancava solo la scansione (polkit nega a Claude da SSH). Francesco ha attivato `xwrt-lab` con sudo.
 - SSH con chiave su 192.168.15.1 riuscito; diagnosi in sola lettura tutta in ordine; il bootloader ha impostato `flag_boot_rootfs=1`.
+
+## 2026-11-10 21:05 — password root e backup della configurazione
+
+- Password root casuale impostata su X-Wrt (salvata in `private/credentials.json`); SSH con password rifiutato, con chiave accettato.
+- `sysupgrade -b` copiato sul PC in `backups/xwrt-config/` con MD5 verificato.

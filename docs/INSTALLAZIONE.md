@@ -148,4 +148,6 @@ Lo script deve fermarsi senza scrivere se un hash non corrisponde.
   - **`flag_boot_rootfs=1` impostato dal bootloader**, con `flag_last_success=1`: conferma diretta che il flag seleziona il System 2 (kernel1);
   - `board.json` contiene i default Wi-Fi del laboratorio; radio 2,4 GHz (rt2800, `phy1-ap0`) attiva in AP; radio 5 GHz (mt76x2e) riconosciuta e spenta;
   - WAN in DHCP dal Fritz (192.168.144.152), LAN 192.168.15.1.
-- Fase C da completare: password root, backup della configurazione (`sysupgrade -b`), WireGuard.
+- **Password root** impostata (24 caratteri casuali, in `private/credentials.json` come `xwrt_root_password`), salvata come hash `$5$`. Serve per la console seriale: dropbear resta `PasswordAuth=off`, `RootPasswordAuth=off`, `Interface=lan`, e un tentativo SSH con password viene rifiutato (`Permission denied (publickey)`).
+- **Backup della configurazione**: `sysupgrade -b`, trasferito via SSH in `backups/xwrt-config/xwrt-config-20261110-2102.tar.gz` (MD5 identico su router e PC, fuori da Git). Contiene `shadow`, chiavi host e password Wi-Fi: è materiale riservato.
+- Resta da fare: WireGuard (da decidere: server o client).
