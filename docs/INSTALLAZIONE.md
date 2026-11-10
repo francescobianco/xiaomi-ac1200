@@ -61,11 +61,12 @@ Non si usano `factory.bin` (formato non accettato dal pannello Xiaomi) né `bree
 
 - [ ] **A1. Seconda copia del backup** su un supporto indipendente (chiavetta, disco esterno o NAS), poi verifica con `sha256sum -c`.
 - [ ] **A2. Firmware ufficiale R3 firmato** (`miwifi_r3_all_*.bin`, preferibilmente la 2.26.39 attualmente installata o una versione stabile ufficiale), scaricato dal CDN Xiaomi, con hash registrato. Chiavetta FAT32 con una sola partizione e il file `.bin` nella radice, pronta e conservata accanto al router.
-- [ ] **A3. Verifiche in sola lettura sul router stock** (script revisionato con `probe_access.py`):
-  - script OTA stock che impostano i flag (`grep -rn flag_last_success /usr /lib /etc`), per confermare che `flag_last_success=1` faccia avviare il System 2 (kernel1);
-  - GPIO del reset (`/proc/xiaoqiang/reset`) e stato attuale del tasto;
-  - blocchi danneggiati e statistiche ECC su kernel1 e sull'area 0xa00000–0x8000000;
-  - disponibilità di `mtd`, `nanddump`, `md5sum` e `sha256sum` sul router.
+- [x] **A3. Verifiche in sola lettura sul router stock** (10/11/2026; `scripts/read_install_checks.sh` e `scripts/read_boot_logic.sh`; evidenze in [evidence/2026-11-10-install-readonly-checks.json](evidence/2026-11-10-install-readonly-checks.json)). Nessuna modifica al router.
+  - **Flag:** a ogni avvio riuscito `/usr/sbin/boot_check` imposta `flag_last_success` all'indice del sistema avviato (0 = kernel0/rootfs0, 1 = kernel1/rootfs1) e azzera `flag_try_sys*_failed`. `flag_try_sysN_failed` viene messo a 1 dall'initramfs (rootfs non montabile) e da `key_services_boot_check` (servizi falliti). `flag_boot_rootfs` viene solo letto dagli script userspace: lo scrive il bootloader in base al sistema che avvia. Quindi **`flag_last_success=1` → il bootloader sceglie il System 2 (kernel1)**, coerente con la ricetta X-Wrt. La logica interna di U-Boot non è stata disassemblata: resta un'inferenza forte, non una prova.
+  - **Reset:** GPIO 30, valore 1 a tasto rilasciato (premuto = 0, come atteso dalla recovery).
+  - **Blocchi danneggiati:** 0 su rootfs0 e su overlay (UBI). rootfs1 non verificato perché lo stock non lo monta.
+  - **Strumenti sul router:** `mtd` (con `write` e `verify`), `md5sum`, `nanddump`, `flash_erase`, `ubiformat`, `curl`, `wget`. **`sha256sum` assente**: sul router si verifica con MD5, sul PC con SHA-256.
+  - **Spazio:** 59 MB liberi in `/tmp`, sufficienti per le due immagini (7,4 MB).
 - [ ] **A4. Rete del PC**: profilo NetworkManager per 192.168.15.0/24 sul dongle o sul cavo (es. 192.168.15.10, senza route predefinita), pronto per il primo avvio.
 - [ ] **A5. Scheda finale** con immagini, hash, flag e comandi esatti, approvata da Francesco.
 
@@ -76,7 +77,7 @@ Da eseguire come root sullo stock tramite lo stesso canale già dimostrato, con 
 ```sh
 # 1. trasferimento in /tmp e verifica hash sul router
 cd /tmp && <download di kernel1.bin e rootfs0.bin dal PC>
-sha256sum kernel1.bin rootfs0.bin    # oppure md5sum, confrontato con il PC
+md5sum kernel1.bin rootfs0.bin       # sha256sum non esiste sullo stock: confronto MD5 col PC
 
 # 2. flag (gli unici cambi NVRAM)
 nvram set flag_last_success=1        # avvio dal System 2 = kernel1
@@ -88,7 +89,9 @@ nvram commit
 mtd write kernel1.bin kernel1
 mtd write rootfs0.bin rootfs0
 
-# 4. rilettura e confronto (nanddump --omitoob --length=<dimensione>), poi
+# 4. verifica di quanto scritto, poi riavvio
+mtd verify kernel1.bin kernel1
+mtd verify rootfs0.bin rootfs0
 reboot
 ```
 
@@ -108,7 +111,7 @@ Lo script deve fermarsi senza scrivere se un hash non corrisponde.
 | --- | --- | --- |
 | X-Wrt si avvia ma configurazione o rete sono sbagliate | Failsafe OpenWrt (tasto reset durante l'avvio, poi 192.168.15.1) oppure `firstboot`; poi SSH | No |
 | Voglio tornare allo stock | Da X-Wrt: `fw_setenv flag_last_success 0`, `fw_setenv flag_try_sys1_failed 0`, `fw_setenv flag_try_sys2_failed 0`. Riavvio **tenendo premuto reset** con la chiavetta A2 inserita: il kernel0 stock entra in recovery e riscrive tutto | No |
-| Il bootloader avvia per errore kernel0 | L'initramfs stock non trova il suo rootfs, imposta `flag_try_sys1_failed=1` e riavvia, quindi si dovrebbe tornare su kernel1 (da confermare in A3). Con reset premuto e chiavetta si torna allo stock | No |
+| Il bootloader avvia per errore kernel0 | L'initramfs stock non trova il suo rootfs, imposta `flag_try_sys1_failed=1` e riavvia; il bootloader dovrebbe passare al System 2 (kernel1). Con reset premuto e chiavetta si torna allo stock | No |
 | kernel1 X-Wrt corrotto (CRC errato) | Il bootloader verifica il CRC e dovrebbe ripiegare sul kernel0 stock, quindi recovery USB | Probabilmente no |
 | **kernel1 X-Wrt con CRC valido ma che non arriva al sistema** (panic, blocco) | Il bootloader continua ad avviarlo: non c'è un ripiego automatico noto | **Sì**: menu U-Boot via UART (attivato in B2) e TFTP |
 | Bootloader danneggiato | Non lo tocchiamo; servirebbe un programmatore NAND | Oltre la seriale |
@@ -117,6 +120,6 @@ Lo script deve fermarsi senza scrivere se un hash non corrisponde.
 
 ## 5. Punti aperti
 
-- Semantica esatta di `flag_last_success` nel bootloader: dedotta dalle ricette della comunità e dalla logica stock, da confermare con A3.
+- Semantica di `flag_last_success` nel bootloader: confermata indirettamente dagli script stock (A3). Una prova diretta richiederebbe il disassemblaggio di U-Boot o la seriale.
 - Comportamento di UBI al primo avvio sull'area che contiene ancora i vecchi dati stock (rootfs1, overlay): la ricetta della comunità funziona così, ma registreremo il `dmesg` del primo avvio.
 - Indirizzo del failsafe X-Wrt: **192.168.15.1** (`CONFIG_TARGET_PREINIT_IP` nella configurazione della build), lo stesso della LAN.

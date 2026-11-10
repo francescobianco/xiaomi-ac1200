@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-10",
+  "mode": "sola lettura via probe_access.py (scripts/read_install_checks.sh, scripts/read_boot_logic.sh)",
+  "router_changes": "nessuna: nessun nvram set/commit, nessuna scrittura mtd, nessun riavvio",
+  "firmware": "MiWiFi-R3 2.26.39, kernel 2.6.36, cmdline console=ttyS1,115200n8 root=/dev/ram0 uart_en=0 factory_mode=0",
+  "boot_flags": {"flag_boot_rootfs": 0, "flag_last_success": 0, "flag_boot_success": 1, "flag_try_sys1_failed": 0, "flag_try_sys2_failed": 0, "flag_ota_reboot": 0, "flag_boot_type": 2, "boot_wait": "off", "uart_en": 0, "bootdelay": 5},
+  "flag_semantics_from_stock_scripts": {
+    "flag_last_success": "/usr/sbin/boot_check, a fine avvio riuscito, lo imposta all'indice del sistema corrente (mtd UBI attuale - mtd rootfs0): 0 = System 1 (kernel0/rootfs0), 1 = System 2 (kernel1/rootfs1)",
+    "flag_try_sysN_failed": "impostati a 1 da key_services_boot_check (servizi falliti) e dall'initramfs (rootfs non montabile); azzerati da boot_check a fine avvio riuscito",
+    "flag_boot_rootfs": "solo letto dagli script stock (initramfs, bootinfo, preinit), nessuno script userspace lo scrive: lo imposta il bootloader in base al sistema che avvia (la stringa compare in U-Boot)",
+    "conclusione": "coerente con la ricetta X-Wrt: flag_last_success=1 fa scegliere al bootloader il System 2 (kernel1). La logica interna di U-Boot non e' stata disassemblata."
+  },
+  "reset_button": {"gpio": 30, "value_released": 1, "pressed_value_expected": 0},
+  "model": "R3",
+  "ft_mode": 0,
+  "bad_blocks": {"rootfs0_mtd10_bad_PEBs": 0, "overlay_mtd12_bad_PEBs": 0, "rootfs1_mtd11": "non verificato (non montato dallo stock)"},
+  "router_tools": {"mtd": "presente, con write e verify", "md5sum": "presente", "sha256sum": "assente", "nanddump": "presente", "flash_erase": "presente", "ubiformat": "presente", "curl": "presente", "wget": "presente"},
+  "tmp_free_kib": 59972,
+  "mem_free_with_cache_kib": 78656,
+  "private_reports": ["private/install-checks.txt", "private/boot-logic.txt"]
+}

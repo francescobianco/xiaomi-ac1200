@@ -81,7 +81,8 @@ Configurazione host generata:
 
 - [x] Immagine con WireGuard, SSH solo con chiave (dalla LAN) e Image Builder: build `-j12` riuscita alle 19:41 e verificata (`docs/evidence/2026-11-10-build-wireguard.json`). Restano da valutare password root e ccache.
 - [x] Piano di installazione e recupero scritto: **docs/INSTALLAZIONE.md** (PROPOSTA). Scoperta: la recovery USB Xiaomi sta nell'initramfs del kernel stock (reset all'avvio + chiavetta con firmware firmato), non nel bootloader; Config è un ambiente U-Boot modificabile con fw_setenv. Via proposta: kernel1 + rootfs0, kernel0 stock preservato.
-- [ ] Fase A del piano: copia indipendente del backup, firmware ufficiale firmato su chiavetta, verifiche in sola lettura sul router (semantica di flag_last_success), profilo di rete 192.168.15.x, scheda finale approvata.
+- [x] A3 verifiche in sola lettura sul router: `flag_last_success` = indice dell'ultimo sistema avviato con successo (1 → kernel1); reset su GPIO 30; 0 blocchi danneggiati su rootfs0 e overlay; `md5sum` e `mtd verify` disponibili, `sha256sum` no.
+- [ ] Resto della fase A: copia indipendente del backup (A1), firmware ufficiale firmato su chiavetta (A2), profilo di rete 192.168.15.x (A4), scheda finale approvata (A5).
 - [ ] Fase B (flash) solo dopo il via libera di Francesco.
 
 ## Recupero e avvio: risultati e limiti
