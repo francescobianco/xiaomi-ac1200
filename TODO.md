@@ -89,7 +89,40 @@ Configurazione host generata:
 - [x] Fase B (flash) eseguita il 10/11/2026 20:32 su richiesta di Francesco: scritture verificate, X-Wrt si avvia (WAN 192.168.144.152, hostname OpenWrt).
 - [x] Wi-Fi `R3-XWrt-Lab` funzionante (l'assenza era un errore di scansione da SSH); accesso `ssh root@192.168.15.1` con chiave; diagnosi OK. Il bootloader ha impostato `flag_boot_rootfs=1`.
 - [x] Fase C: password root impostata (in `private/credentials.json`), SSH solo con chiave verificato, backup `sysupgrade -b` in `backups/xwrt-config/`.
-- [ ] WireGuard: decidere server o client, configurare, misurare.
+- [x] WireGuard: deciso **server**, a casa dietro la Iliadbox, per entrare da fuori nella rete di casa.
+
+## Domani (11/11/2026)
+
+### 1. WireGuard server (prima di portare il router a casa, ma anche dopo va bene)
+- [ ] Sul router: chiavi del server, interfaccia `wg0` (es. 10.15.0.1/24, porta UDP 51820), zona firewall con inoltro verso `lan` e `wan` (masquerade già attivo su wan), regola per accettare UDP 51820 dalla WAN.
+- [ ] Profili per i dispositivi di Francesco (chiedere quali: telefono, portatile…), con QR per il telefono. Chiavi e profili in `private/`, mai in Git.
+- [ ] `sysupgrade -b` dopo la configurazione, copiato sul PC e a casa.
+- [ ] Rendere riproducibile: valutare un uci-defaults generato dal wrapper (come Wi-Fi e chiave SSH) o uno script di configurazione.
+
+### 2. A casa con la Iliadbox
+- [ ] Collegamento: porta **blu (WAN)** del router → LAN della Iliadbox. Il router prende un IP dalla Iliadbox; riservarlo (DHCP statico) sulla Iliadbox.
+- [ ] Verificare l'**IP pubblico vero**: l'IP WAN mostrato dalla Iliadbox deve coincidere con quello visto da un sito «what is my IP». Se non coincide c'è CGNAT e l'inoltro non funziona (alternative: IPv6 o relay).
+- [ ] Rete della Iliadbox: controllare che non sia 192.168.15.x (conflitto con la LAN del router).
+- [ ] Inoltro **UDP 51820** sulla Iliadbox → IP del router.
+- [ ] IP pubblico dinamico → **DDNS** (`ddns-scripts` sul router, provider da scegliere).
+- [ ] Verificare se la Iliadbox ha un server VPN/WireGuard integrato (non verificato): informativo, il piano resta il router.
+- [ ] Test da fuori (rete mobile): raggiungere 192.168.15.1 e i dispositivi della rete Iliadbox; misurare la velocità.
+- [ ] Dal Wi-Fi di casa non serve più il dongle dell'ufficio: SSH al router dalla rete Iliadbox non è possibile (dropbear solo LAN), quindi entrare dalla Wi-Fi `R3-XWrt-Lab` o via WireGuard.
+
+### 3. btedge sul router (dopo WireGuard)
+Progetto: `/home/francesco/btedge` (Python stdlib + BlueZ via D-Bus, ~25 MB RAM).
+- [ ] Dongle USB Bluetooth: preferire **CSR8510** (nessun firmware) o Realtek RTL8761B (pacchetto firmware). Evitare Broadcom.
+- [ ] Immagine: aggiungere `kmod-bluetooth`, `kmod-btusb` (da compilare noi per il vermagic) e i feed OpenWrt `packages` (finora non usati): `bluez-daemon`, `dbus`, `python3-light` + `python3-sqlite3`, `python3-logging`, `python3-urllib`, `python3-dbus-fast`. Aggiornare seed, lock e documentazione; la prima build con Python sarà più lunga.
+- [ ] **Ostacolo:** `python3-dbus` (dbus-python) e `python3-gi` (PyGObject) NON esistono in OpenWrt. Scegliere:
+  - (consigliata) riscrivere solo `btedge/bluez.py` su **dbus-fast** (asyncio), mantenendo BlueZ, scansione e beacon `LEAdvertisingManager1`; il backend funzionerebbe anche su Armbian;
+  - (leggera) backend HCI raw con `socket.AF_BLUETOOTH` della libreria standard, senza BlueZ né D-Bus.
+- [ ] Prova di carico prima del dongle: `python3 -m btedge --fake` sul router, misurare RAM e CPU (MT7620 a 580 MHz).
+- [ ] Database SQLite: decidere tra flash (UBIFS, poche scritture) e RAM (`/tmp`, storia persa al riavvio).
+- [ ] Mesh: la LAN del router è separata da quella della Iliadbox, quindi niente multicast tra le due. Usare i `peers` via IP, eventualmente dentro WireGuard verso i nodi dell'ufficio.
+
+### Varie
+- [ ] Copiare a casa anche `backups/xwrt-config/` (comando rsync in RECAP).
+- [ ] Facoltativo: copia dei backup sui NAS dell'ufficio (servono credenziali).
 
 ## Recupero e avvio: risultati e limiti
 
