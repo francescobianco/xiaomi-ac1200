@@ -127,3 +127,9 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Ricontrollati gli hash locali del backup NAND e del firmware stock, poi creato il pacchetto `work/a1-export/xiaomi-r3-backup-2026-11-10.tar` (SHA-256 `83c95be1…4ca3`).
 - Francesco l'ha copiato con rsync, via VPN, sul suo PC di casa e l'ha verificato con `sha256sum -c`: OK.
 - NAS dell'ufficio (Synology .88, Fritz .1): accesso negato senza credenziali, copia rimandata.
+
+## 2026-11-10 sera — flash di X-Wrt (fase B)
+
+- Su richiesta esplicita di Francesco, flash da remoto senza attendere la chiavetta. Scritture di kernel1 e rootfs0 verificate (`Success`), flag impostati, riavvio alle 20:32.
+- X-Wrt si avvia: WAN su 192.168.144.152 (`OpenWrt.fritz.box`). Wi-Fi non visibile, accesso solo dalla LAN.
+- Il dongle del PC è passato da solo al Wi-Fi del Fritz dell'ufficio (profilo già salvato).

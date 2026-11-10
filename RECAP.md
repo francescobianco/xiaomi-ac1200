@@ -5,6 +5,7 @@
 > **20:05 — A3 fatta (sola lettura sul router):** semantica dei flag confermata dagli script stock; dettagli in `docs/INSTALLAZIONE.md`. Restano A1, A2, A4, A5.
 > **20:15 — A2 e A4 fatte per la parte possibile da remoto.** Firmware stock 2.26.39 scaricato e verificato (firma RSA valida). Immagine ricompilata con il Wi-Fi a 2,4 GHz acceso (`R3-XWrt-Lab`). Restano da fare di persona o con sudo: copia del backup su un supporto esterno, chiavetta FAT32 con il firmware, approvazione della scheda.
 > **20:20 — profilo `xwrt-lab` creato da Francesco e verificato: A4 completata.**
+> **20:45 — FLASH ESEGUITO (fase B), su richiesta di Francesco.** kernel1 e rootfs0 scritti e verificati, flag impostati, riavvio. **X-Wrt si avvia**: risponde su 192.168.144.152 (WAN sulla LAN dell'ufficio, hostname `OpenWrt`). Il Wi-Fi `R3-XWrt-Lab` NON compare e il lato WAN è chiuso: serve un accesso dalla LAN (cavo sulla porta LAN) per diagnosticare. Il dongle del PC si è ricollegato da solo al Wi-Fi del Fritz (profilo salvato). Dettagli in docs/INSTALLAZIONE.md §6.
 > **20:25 — A1 completata:** backup e firmware copiati sul PC di casa di Francesco, SHA-256 OK. Restano la chiavetta FAT32 con il firmware (A2) e l'approvazione della scheda (A5).
 >
 > Storico della seconda build (WireGuard + chiave SSH + Image Builder):

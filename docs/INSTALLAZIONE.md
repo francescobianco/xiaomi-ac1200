@@ -1,6 +1,8 @@
 # Piano di installazione e recupero — X-Wrt su Xiaomi R3
 
-**Stato: PROPOSTA, non eseguita.** Redatta il 10 novembre 2026 sulla base del backup e dei sorgenti. Nessun comando di questo documento è stato eseguito sul router. La fase B richiede un via libera esplicito di Francesco.
+**Stato: FASE B ESEGUITA il 10/11/2026 alle 20:32, da remoto, su richiesta esplicita di Francesco** (prima della chiavetta FAT32 e senza nessuno accanto al router). Esito: X-Wrt si avvia (vedi sotto); il Wi-Fi non compare ancora.
+
+~~Stato: PROPOSTA, non eseguita.~~ Redatta il 10 novembre 2026 sulla base del backup e dei sorgenti. Nessun comando di questo documento è stato eseguito sul router. La fase B richiede un via libera esplicito di Francesco.
 
 ## 1. Cosa abbiamo scoperto analizzando il backup
 
@@ -129,3 +131,10 @@ Lo script deve fermarsi senza scrivere se un hash non corrisponde.
 - Semantica di `flag_last_success` nel bootloader: confermata indirettamente dagli script stock (A3). Una prova diretta richiederebbe il disassemblaggio di U-Boot o la seriale.
 - Comportamento di UBI al primo avvio sull'area che contiene ancora i vecchi dati stock (rootfs1, overlay): la ricetta della comunità funziona così, ma registreremo il `dmesg` del primo avvio.
 - Indirizzo del failsafe X-Wrt: **192.168.15.1** (`CONFIG_TARGET_PREINIT_IP` nella configurazione della build), lo stesso della LAN.
+
+## 6. Esecuzione della fase B (10/11/2026)
+
+- Script: `scripts/flash_xwrt.sh` (sul router) e `scripts/flash_server.py` (sul PC, serve solo le due immagini e raccoglie i rapporti). Rapporti integrali in `private/flash-*.txt`.
+- Sequenza osservata: immagini scaricate, MD5 e dimensioni corrette; ambiente in RAM (busybox, mtd, curl) provato in `chroot`; `mtd write` + `mtd verify` su kernel1 → **Success**; flag `flag_last_success=1`, `boot_wait=on`, `uart_en=1`; dal `chroot` `mtd write` + `mtd verify` su rootfs0 → **Success**; `reboot -f`.
+- Dopo il riavvio: il router risponde al ping su **192.168.144.152** con il MAC WAN `f0:b4:29:f3:63:2d` (factory 0x28, come da `02_network` di X-Wrt). Il Fritz lo registra come **`OpenWrt.fritz.box`**, quindi **X-Wrt si è avviato**. La porta WAN risulta collegata alla LAN dell'ufficio.
+- Le porte TCP lato WAN rispondono con un rifiuto (firewall di OpenWrt; dropbear è limitato alla LAN per scelta). **Le reti `R3-XWrt-Lab` e `Xiaomi-R3-Lab` non sono visibili** dal dongle dopo oltre 10 minuti: la radio a 2,4 GHz non si è accesa, oppure la configurazione `board.d` non è stata applicata. Serve un accesso dal lato LAN per diagnosticare.

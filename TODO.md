@@ -86,7 +86,8 @@ Configurazione host generata:
 - [x] A4 lato immagine: Wi-Fi 2,4 GHz WPA2 acceso al primo avvio (`R3-XWrt-Lab`, password in `private/router_wifi.conf`); terza build verificata.
 - [x] A1: backup NAND e firmware stock copiati sul PC di casa di Francesco e verificati (SHA-256 OK).
 - [ ] Da fare di persona: chiavetta FAT32 con il firmware (A2); (A4 completata: profilo `xwrt-lab` creato e verificato); approvazione della scheda finale (A5).
-- [ ] Fase B (flash) solo dopo il via libera di Francesco.
+- [x] Fase B (flash) eseguita il 10/11/2026 20:32 su richiesta di Francesco: scritture verificate, X-Wrt si avvia (WAN 192.168.144.152, hostname OpenWrt).
+- [ ] Wi-Fi `R3-XWrt-Lab` non visibile e WAN chiusa: accesso LAN via cavo per diagnosticare (vedi docs/INSTALLAZIONE.md §6).
 
 ## Recupero e avvio: risultati e limiti
 
@@ -144,7 +145,7 @@ Il wrapper va aggiornato per rendere persistente il fix anche nella build comple
 - [x] Build completa riuscita (10/11/2026 19:29, Linux 6.18.60, r0-61de480).
 - [ ] Artefatti controllati e configurazione di accesso sicura predisposta per l'immagine.
 - [ ] Recovery concreta definita e copia indipendente del backup disponibile.
-- [ ] Primo avvio del sistema nuovo.
+- [x] Primo avvio del sistema nuovo (raggiungibile solo via ping su WAN; da completare l'accesso).
 - [ ] Ethernet/Wi-Fi/USB e persistenza verificati.
 - [ ] WireGuard configurato e prestazioni misurate.
 - [ ] Aggiornamento tra due build e recupero da configurazione errata provati.
