@@ -84,7 +84,7 @@ Configurazione host generata:
 - [x] A3 verifiche in sola lettura sul router: `flag_last_success` = indice dell'ultimo sistema avviato con successo (1 → kernel1); reset su GPIO 30; 0 blocchi danneggiati su rootfs0 e overlay; `md5sum` e `mtd verify` disponibili, `sha256sum` no.
 - [x] A2: firmware ufficiale 2.26.39 scaricato e verificato (firma RSA valida, kernel uguale al backup).
 - [x] A4 lato immagine: Wi-Fi 2,4 GHz WPA2 acceso al primo avvio (`R3-XWrt-Lab`, password in `private/router_wifi.conf`); terza build verificata.
-- [ ] Da fare di persona o con sudo: copia indipendente del backup e del firmware stock (A1); chiavetta FAT32 con il firmware (A2); `sudo bash scripts/setup_pc_xwrt_network.sh` (A4); approvazione della scheda finale (A5).
+- [ ] Da fare di persona o con sudo: copia indipendente del backup e del firmware stock (A1); chiavetta FAT32 con il firmware (A2); (A4 completata: profilo `xwrt-lab` creato e verificato); approvazione della scheda finale (A5).
 - [ ] Fase B (flash) solo dopo il via libera di Francesco.
 
 ## Recupero e avvio: risultati e limiti

@@ -70,9 +70,9 @@ Non si usano `factory.bin` (formato non accettato dal pannello Xiaomi) né `bree
   - **Blocchi danneggiati:** 0 su rootfs0 e su overlay (UBI). rootfs1 non verificato perché lo stock non lo monta.
   - **Strumenti sul router:** `mtd` (con `write` e `verify`), `md5sum`, `nanddump`, `flash_erase`, `ubiformat`, `curl`, `wget`. **`sha256sum` assente**: sul router si verifica con MD5, sul PC con SHA-256.
   - **Spazio:** 59 MB liberi in `/tmp`, sufficienti per le due immagini (7,4 MB).
-- [ ] **A4. Accesso al primo avvio senza cavo.** Il Wi-Fi di X-Wrt parte spento e il PC ha un solo cavo, quello di Internet e della VPN. Quindi:
+- [x] **A4. Accesso al primo avvio senza cavo.** Il Wi-Fi di X-Wrt parte spento e il PC ha un solo cavo, quello di Internet e della VPN. Quindi:
   - [x] nell'immagine, `/etc/board.d/99-lab-wifi` (generato dal wrapper con SSID e password da `private/router_wifi.conf`) accende **solo la radio a 2,4 GHz** in WPA2, sulla rete `lan`, paese IT. Il dongle del PC va solo a 2,4 GHz;
-  - [ ] sul PC, profilo `xwrt-lab` (dongle, 192.168.15.10/24, senza gateway né DNS, autoconnessione): **`sudo bash scripts/setup_pc_xwrt_network.sh`**. Da SSH polkit nega la creazione, quindi va lanciato da Francesco;
+  - [x] sul PC, profilo `xwrt-lab` (creato e verificato il 10/11/2026) (dongle, 192.168.15.10/24, senza gateway né DNS, autoconnessione): **`sudo bash scripts/setup_pc_xwrt_network.sh`**. Da SSH polkit nega la creazione, quindi va lanciato da Francesco;
   - 192.168.15.0/24 non è in conflitto con le reti del PC (Docker compreso).
 - [ ] **A5. Scheda finale** con immagini, hash, flag e comandi esatti, approvata da Francesco.
 
