@@ -6,6 +6,10 @@
 > **20:15 — A2 e A4 fatte per la parte possibile da remoto.** Firmware stock 2.26.39 scaricato e verificato (firma RSA valida). Immagine ricompilata con il Wi-Fi a 2,4 GHz acceso (`R3-XWrt-Lab`). Restano da fare di persona o con sudo: copia del backup su un supporto esterno, chiavetta FAT32 con il firmware, approvazione della scheda.
 > **20:20 — profilo `xwrt-lab` creato da Francesco e verificato: A4 completata.**
 > **20:45 — FLASH ESEGUITO (fase B), su richiesta di Francesco.** kernel1 e rootfs0 scritti e verificati, flag impostati, riavvio. **X-Wrt si avvia**: risponde su 192.168.144.152 (WAN sulla LAN dell'ufficio, hostname `OpenWrt`). Il Wi-Fi `R3-XWrt-Lab` NON compare e il lato WAN è chiuso: serve un accesso dalla LAN (cavo sulla porta LAN) per diagnosticare. Il dongle del PC si è ricollegato da solo al Wi-Fi del Fritz (profilo salvato). Dettagli in docs/INSTALLAZIONE.md §6.
+> **PROSSIMO PASSO (11/11 in ufficio):** Francesco collega un cavo a una **porta LAN grigia** del router (la blu è la WAN, già sulla LAN dell'ufficio: lasciarla). MAI collegare una porta LAN grigia alla rete dell'ufficio (X-Wrt è server DHCP).
+> - Se il cavo grigio va al PC al posto di `eno1`: il PC prende 192.168.15.x via DHCP (si perde la VPN remota finché dura). Poi `bash scripts/diag_xwrt.sh` → rapporto in `private/xwrt-diag-*.txt` (sola lettura).
+> - Da diagnosticare: perché la radio a 2,4 GHz / `R3-XWrt-Lab` non è partita (board.json → wlan, `uci show wireless`, `wifi status`, dmesg rt2800).
+> - Poi: password root, `sysupgrade -b`, WireGuard. Router verificabile da remoto con `ping 192.168.144.152`.
 > **20:25 — A1 completata:** backup e firmware copiati sul PC di casa di Francesco, SHA-256 OK. Restano la chiavetta FAT32 con il firmware (A2) e l'approvazione della scheda (A5).
 >
 > Storico della seconda build (WireGuard + chiave SSH + Image Builder):
