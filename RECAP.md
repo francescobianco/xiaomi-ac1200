@@ -1,0 +1,108 @@
+# RECAP — ripresa sessione da remoto (10 novembre 2026, aggiornato 19:31)
+
+> **AGGIORNAMENTO 19:31 — BUILD COMPLETATA CON SUCCESSO (`exit=0`, finita alle 19:29).**
+> La sessione dell'ufficio non ha più make attive: l'istanza di casa può prendere in mano tutto.
+> Le sezioni sotto su "build in corso" sono storiche. Vedi "Esito build" più in basso.
+
+Leggere prima questo file, poi `TODO.md` (passaggio di consegne completo e regole).
+
+## Contesto di questa sessione: LEGGERE SUBITO
+
+- Francesco è **a casa** e lavora su questo PC (quello dell'ufficio) **via VPN e SSH**.
+  Ha aperto questa sessione con `claude --continue`: è una **seconda istanza** che ha
+  ricaricato la conversazione.
+- **In parallelo è ancora aperta la sessione originale** sul terminale dell'ufficio. È lei che
+  ha lanciato la build ed è la madre del processo `make`. Le due istanze condividono lo
+  stesso albero di lavoro.
+- Conseguenze per questa istanza:
+  - **Non avviare un secondo `make` nella stessa directory finché quello originale è attivo**:
+    due build concorrenti su `work/x-wrt` corrompono build_dir/staging_dir. Controllare
+    sempre prima con `pgrep -af 'make.*-j8'`.
+  - **Non terminare** la make, né i processi o la sessione dell'altra istanza.
+  - Questa istanza **non riceve la notifica di fine build**: lo stato si legge dal log
+    (vedi sotto). Non usare sleep per attendere: chiedere a Francesco o ricontrollare quando lo chiede.
+  - Solo una shell SSH: niente GUI, browser o IDE su questo PC.
+  - Le modifiche ai file sono visibili a entrambe le istanze. Prima di modificare un file
+    rileggerlo, e non fare commit in contemporanea con l'altra istanza.
+- Quando la build originale è **terminata** (riga `exit=N` nel log, nessuna make attiva),
+  questa istanza può prendere in mano tutto il lavoro, rilanci compresi.
+
+## Dove eravamo
+
+1. **Risolto l'errore `tools/util-linux`** della prima build.
+   - Causa: Meson non trovava ncurses con pkg-config e ripiegava su `ncursesw6-config`
+     di **Homebrew** (`/home/linuxbrew/...`), mescolando header e librerie estranei
+     (`cur_term` undeclared in `lib/colors.c`).
+   - Fix in `scripts/build_lab.sh`: rimuove linuxbrew dal PATH, azzera
+     HOMEBREW_*/PKG_CONFIG_*/CPATH/LIBRARY_PATH e passa `HOST_EXTRA_CFLAGS`/`HOST_EXTRA_LDFLAGS`
+     come **override make da riga di comando** (rules.mk riassegna quelli esportati).
+     Valgono solo per gli strumenti host, non per il cross compiler MIPS.
+   - Verificato: `tools/util-linux/clean` + `compile -j1 V=s` riusciti
+     (`work/util-linux-fix.log`), curses 6.4 dal sysroot Ubuntu, zero percorsi linuxbrew.
+
+2. **Build completa ripresa** alle ~19:13 con:
+   ```bash
+   bash scripts/build_lab.sh -j8 > work/build-resume.log 2>&1; echo "exit=$?" >> work/build-resume.log
+   ```
+   - È stata lanciata come processo in background della sessione Claude sull'ufficio:
+     se quella sessione viene chiusa, la build muore.
+   - Alle 19:23: tools host e toolchain (gcc 14.4, musl) completati, in corso `target/linux` (kernel 6.18).
+   - Stima di fine: **circa 20:00–20:20**, se non emergono altri errori.
+
+## Esito build (controlli eseguiti alle 19:30)
+
+- Output in `work/x-wrt/bin/targets/ramips/mt7620/`, versione `r0-61de480`, kernel **Linux 6.18.60**.
+- `sha256sum -c sha256sums`: tutti OK.
+- `squashfs-kernel1.bin`: uImage di 2,62 MiB (sotto i 4 MiB dello slot), CRC header e dati OK, load/ep 0x80000000.
+- `initramfs-kernel.bin`: uImage di 6,06 MiB, CRC OK. Supera i 4 MiB: va bene solo per avvio da RAM (TFTP), non per lo slot kernel.
+- `squashfs-sysupgrade.bin`: tar con `CONTROL`, `kernel`, `root`. Ci sono anche `squashfs-factory.bin`, `breed-factory.bin` e `rootfs0.bin`.
+- Manifest con 107 pacchetti: dropbear, wpad-basic-mbedtls, mt76x2, USB2. **Mancano LuCI e WireGuard** (build minima).
+- **Nessuna immagine è stata flashata né proposta per il flash.**
+
+### Prossimi passi proposti (da concordare con Francesco)
+
+1. ~~Aggiornare documentazione, evidenze, commit e push~~ — **FATTO alle 19:40** (commit su main).
+2. Decidere le aggiunte all'immagine (WireGuard, accesso SSH sicuro con chiave, eventuale LuCI) e se
+   attivare Image Builder / ccache.
+3. Studiare con i dati reali il piano di installazione e di recupero: quale immagine usare, quale
+   layout, cosa succede al fallback stock (vedi TODO.md, sezione Recupero). Va fatto prima di qualsiasi flash.
+
+## Cosa fare appena ripresa la sessione (valido se la build non fosse finita)
+
+1. Controllare la build:
+   ```bash
+   tail -5 work/build-resume.log                      # ultima riga exit=N a build finita
+   grep -E '^ make\[' work/build-resume.log | tail -3 # fase corrente
+   pgrep -af 'make.*-j8' || echo "nessuna make attiva"
+   ```
+   - Se non c'è `exit=` e nessuna make è attiva, la build è stata interrotta (sessione chiusa,
+     sospensione): rilanciare il comando sopra. Riparte da dove era (marcatori `.built`/stamp),
+     non da zero.
+2. **Se `exit` è diverso da 0**: cercare `ERROR:` nel log, diagnosticare il pacchetto con
+   `bash scripts/build_lab.sh <pacchetto>/compile -j1 V=s`, correggere in modo riproducibile
+   (wrapper/config, non a mano in build_dir) e riprendere la build.
+3. **Se `exit=0`**: controllare gli artefatti in `work/x-wrt/bin/targets/ramips/mt7620/`
+   (immagini R3, kernel ≤ 4 MiB, CRC uImage, sha256sums, manifest). **Non flashare**: prima
+   piano di installazione e recupero concordati con Francesco (vedi TODO.md, sezione Recupero).
+4. Aggiornare `TODO.md`, `docs/BUILD.md`, `docs/REGISTRO.md`, `README.md` con l'esito reale,
+   poi commit e push (credenziali e dump restano fuori da Git).
+
+## Modifiche non ancora committate
+
+- `scripts/build_lab.sh` (fix Homebrew/override make)
+- `TODO.md` (due checkbox della build spuntati)
+- `RECAP.md` (questo file)
+
+## Proposte in sospeso (da decidere con Francesco, dopo la prima build riuscita)
+
+- Attivare **Image Builder** (`CONFIG_IB`) per generare nuove immagini (WireGuard, configurazioni)
+  in pochi minuti senza ricompilare; eventualmente **SDK** e **ccache**.
+  Cambia la configurazione: aggiornare `configs/` e `sources.lock.json`.
+- Usare `-j12` (il PC ha 12 core) nelle build future.
+- Lanciare le prossime build lunghe dentro `tmux` o con `setsid nohup`, così sopravvivono
+  alla chiusura della sessione.
+
+## Promemoria
+
+- Ambiente: build solo locale, nessuna comunicazione con il router in questa fase.
+- Il PC non deve andare in sospensione durante la build.

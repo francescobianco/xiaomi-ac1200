@@ -15,4 +15,4 @@ Il nome della cartella conserva la descrizione iniziale «AC1200», che identifi
 
 **Stato al 10 novembre 2026:** configurazione stock completata e accesso root tramite API dimostrato, senza seriale. Copia logica con ECC della NAND (128 MiB) acquisita e verificata; lettura raw/OOB fallita. SSH non installato; firmware, bootloader e parametri NVRAM non modificati dalla procedura di accesso. Internet del PC resta sul cavo.
 
-Base candidata scelta: X-Wrt, kernel 6.18.60; prima compilazione locale terminata con errore negli strumenti host ncurses/util-linux. Prossimo traguardo: verificare gli artefatti e predisporre il recupero. Nessuna immagine ancora selezionata o installata. Credenziali in `private/`, dump in `backups/`, entrambi esclusi da Git.
+Base candidata scelta: X-Wrt, kernel 6.18.60. **Prima build locale riuscita** (immagini R3 con checksum e CRC verificati, configurazione minima senza LuCI né WireGuard). Prossimo traguardo: completare l'immagine (WireGuard, SSH con chiave) e predisporre installazione e recupero. Nessuna immagine ancora installata. Credenziali in `private/`, dump in `backups/`, entrambi esclusi da Git.

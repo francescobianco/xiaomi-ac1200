@@ -1,0 +1,33 @@
+{
+  "build_completed": true,
+  "finished_at": "2026-11-10T19:29:00+01:00",
+  "make_exit_code": 0,
+  "log": "work/build-resume.log",
+  "source": "x-wrt 61de4809b444b7a3d3c0a9cc27c1e0d6702572e4",
+  "version_buildinfo": "r0-61de480",
+  "kernel": "Linux 6.18.60",
+  "target_profile": "ramips/mt7620 xiaomi_miwifi-r3",
+  "configuration_sha256_matches_lock": true,
+  "configuration_sha256": "fe7fe088adb4bb06790e9ec5d6b0a95df8eaa27c18da3b5aae3a4a67312d958c",
+  "sha256sums_check": "all OK",
+  "checksums_file": "configs/build-2026-11-10.sha256sums",
+  "manifest_file": "configs/build-2026-11-10.manifest",
+  "manifest_packages": 107,
+  "images": {
+    "squashfs-kernel1.bin": {"bytes": 2745753, "uimage_payload_bytes": 2745689, "fits_4MiB_slot": true, "header_crc": "OK", "data_crc": "OK", "load": "0x80000000", "entry": "0x80000000"},
+    "initramfs-kernel.bin": {"bytes": 6355831, "uimage_payload_bytes": 6355767, "fits_4MiB_slot": false, "header_crc": "OK", "data_crc": "OK", "note": "solo avvio da RAM; nessun metodo senza seriale dimostrato"},
+    "squashfs-sysupgrade.bin": {"bytes": 6502663, "format": "tar con CONTROL, kernel, root"},
+    "squashfs-factory.bin": {"bytes": 9043968},
+    "squashfs-breed-factory.bin": {"bytes": 13238272},
+    "squashfs-rootfs0.bin": {"bytes": 4849664}
+  },
+  "included": ["dropbear", "wpad-basic-mbedtls", "kmod-mt76x2", "kmod-usb2"],
+  "missing": ["luci", "wireguard"],
+  "fix_applied": "scripts/build_lab.sh: Homebrew rimosso dal PATH, HOST_EXTRA_CFLAGS/LDFLAGS come override make",
+  "flashed": false,
+  "limitations": [
+    "Nessuna prova su hardware.",
+    "Compatibilita' di factory.bin con il pannello stock non verificata.",
+    "Piano di installazione e recupero non ancora definito."
+  ]
+}

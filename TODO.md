@@ -1,6 +1,6 @@
 # Passaggio di consegne — Xiaomi R3
 
-**Aggiornato: 10 novembre 2026, al termine della prima build locale (fallita). Leggere questo file prima di operare.**
+**Aggiornato: 10 novembre 2026, 19:40 — prima build locale RIUSCITA (Linux 6.18.60). Leggere questo file prima di operare.**
 
 ## Obiettivo e autorizzazioni
 
@@ -39,11 +39,11 @@ La prima ricognizione web era incompleta. **Il clone Git attuale X-Wrt contiene 
 - Nessun feed installato per la build minima; warning su dipendenze opzionali non selezionate. Download completato (~493 MiB, 91 archivi inventariati).
 - Output atteso: `work/x-wrt/bin/targets/ramips/mt7620/`.
 
-## Build in corso / errore attuale — PRIORITÀ
+## Build: storico dell'errore util-linux (RISOLTO, vedi docs/BUILD.md)
 
 Comando avviato: `bash scripts/build_lab.sh -j8 > work/build.log 2>&1`.
 
-**La prima build è terminata con exit code 2.** Nessuna build completa lasciata attiva; la precedente sessione `61781` è conclusa. Il problema osservato è `ERROR: tools/util-linux failed to build`. Non è stata prodotta un'immagine pronta da installare.
+**Storico:** la prima build era terminata con exit code 2. Nessuna build completa lasciata attiva; la precedente sessione `61781` è conclusa. Il problema osservato è `ERROR: tools/util-linux failed to build`. Non è stata prodotta un'immagine pronta da installare.
 
 Diagnosi concreta già effettuata con:
 
@@ -67,13 +67,18 @@ Configurazione host generata:
 
 ### Prossimi passi della build
 
-- [ ] Aggiornare il wrapper con override make per flag host e risolvere la selezione ncurses Homebrew.
+- [x] Wrapper aggiornato: Homebrew rimosso dal PATH (Meson trovava `ncursesw6-config` di Linuxbrew) e HOST_EXTRA_CFLAGS/LDFLAGS passati come override make.
 - [x] Prima make completa conclusa: exit code 2, errore host util-linux. Nessuna make completa ancora attiva.
-- [ ] Riconfigurare/recompilare il solo tools/util-linux con log verboso; se occorre usare il target `tools/util-linux/clean`, non cancellare l'intero albero.
-- [ ] Riprendere `bash scripts/build_lab.sh -j8 > work/build-resume.log 2>&1`.
-- [ ] Correggere eventuali ulteriori errori e portare la build a termine; registrare ogni fix riproducibile, non solo modifiche manuali a build_dir.
-- [ ] A successo: verificare immagini R3, dimensioni kernel <=4 MiB, uImage CRC, metadati, manifest e hash. Non flashare automaticamente.
-- [ ] Aggiornare questo TODO, BUILD.md, REGISTRO.md e README con esito effettivo.
+- [x] `tools/util-linux/clean` + `compile -j1 V=s` riusciti (log `work/util-linux-fix.log`): Meson trova curses 6.4 del sysroot Ubuntu, `HAVE_NCURSES_H`/`HAVE_TERM_H` attivi, nessun percorso linuxbrew.
+- [x] Build ripresa (`work/build-resume.log`): **exit=0** alle 19:29, nessun altro errore dopo il fix di util-linux.
+- [x] Build portata a termine; l'unico fix necessario è quello riproducibile nel wrapper.
+- [x] Immagini verificate (dettagli in RECAP.md): sha256sums OK; kernel1 di 2,62 MiB con CRC OK; initramfs di 6,06 MiB (solo avvio da RAM); 107 pacchetti, senza LuCI né WireGuard. Nessun flash.
+- [x] TODO, BUILD.md, REGISTRO.md e README aggiornati con l'esito effettivo; checksum e manifest in `configs/`.
+
+### Prossimi passi (da concordare con Francesco)
+
+- [ ] Decidere le aggiunte all'immagine: WireGuard (`wireguard-tools`, `kmod-wireguard`), chiave SSH autorizzata, password root, eventuale LuCI. Valutare Image Builder/ccache e `-j12`.
+- [ ] Piano di installazione e recupero: quale immagine e quale layout (UBI standard o variante slot1), fallback dello stock, copia indipendente del backup.
 
 ## Recupero e avvio: risultati e limiti
 
@@ -128,7 +133,7 @@ Il wrapper va aggiornato per rendere persistente il fix anche nella build comple
 - [x] Prerequisiti host e generazione defconfig riusciti.
 - [x] Download completato; configurazione attuale uguale all'hash del lock.
 - [x] Controlli sintattici Python/shell e `git diff --check` superati prima del commit.
-- [ ] Build completa riuscita.
+- [x] Build completa riuscita (10/11/2026 19:29, Linux 6.18.60, r0-61de480).
 - [ ] Artefatti controllati e configurazione di accesso sicura predisposta per l'immagine.
 - [ ] Recovery concreta definita e copia indipendente del backup disponibile.
 - [ ] Primo avvio del sistema nuovo.

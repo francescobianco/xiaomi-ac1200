@@ -82,3 +82,12 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Prima compilazione completa terminata con exit code 2, errore host util-linux/ncurses (`cur_term` non dichiarato). Nessuna build completa lasciata attiva.
 - Salvata diagnosi e sequenza di ripresa in `TODO.md`: gli export HOST_EXTRA_* del wrapper sono sovrascritti da rules.mk; il fix resta da applicare e verificare.
 - Francesco ha richiesto di completare TODO.md e fare commit/push del materiale del progetto. Credenziali, dump, checkout/cache di lavoro e impostazioni IDE restano esclusi da Git.
+
+
+## 2026-11-10 sera — fix util-linux e prima build riuscita
+
+- Causa dell'errore: Meson usava `ncursesw6-config` di Homebrew dal PATH. Il wrapper ora ripulisce il PATH e passa i flag host come override make. util-linux è stato ricompilato da solo con log verboso (`work/util-linux-fix.log`).
+- Build completa ripresa: exit 0 alle 19:29. Immagini R3 controllate: checksum OK, kernel1 di 2,62 MiB con CRC OK, initramfs di 6,06 MiB solo per avvio da RAM. 107 pacchetti, senza LuCI né WireGuard.
+- Checksum e manifest copiati in `configs/`, evidenze in `docs/evidence/2026-11-10-build-artifacts.json`.
+- Nessuna comunicazione con il router, nessun flash, riavvio o modifica NVRAM.
+- Prossimo passo: decidere le aggiunte all'immagine e definire il piano di installazione e recupero.
