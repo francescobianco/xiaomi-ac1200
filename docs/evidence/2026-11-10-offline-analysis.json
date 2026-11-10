@@ -1,0 +1,85 @@
+{
+  "backup_size": 134217728,
+  "combined_sha256_verified": true,
+  "stock_kernels": [
+    {
+      "offset": 2097152,
+      "payload_size": 2256483,
+      "load": "0x80000000",
+      "entry": "0x80000000",
+      "name": "MIPS OpenWrt Linux-2.6.36",
+      "compression_id": 3,
+      "header_crc_ok": true,
+      "payload_crc_ok": true
+    },
+    {
+      "offset": 6291456,
+      "payload_size": 2247546,
+      "load": "0x80000000",
+      "entry": "0x80000000",
+      "name": "MIPS OpenWrt Linux-2.6.36",
+      "compression_id": 3,
+      "header_crc_ok": true,
+      "payload_crc_ok": true
+    }
+  ],
+  "bootloader_version_strings": [
+    "U-Boot 1.1.3 (Apr 12 2016 - 15:03:40)",
+    "U-Boot BOOT ERROR! "
+  ],
+  "bootloader_contains_tftp_menu": true,
+  "recovery_tested": false,
+  "candidate_dts_partitions": [
+    {
+      "name": "Bootloader",
+      "offset": 0,
+      "size": 262144
+    },
+    {
+      "name": "Config",
+      "offset": 262144,
+      "size": 262144
+    },
+    {
+      "name": "Bdata",
+      "offset": 524288,
+      "size": 262144
+    },
+    {
+      "name": "factory",
+      "offset": 786432,
+      "size": 262144
+    },
+    {
+      "name": "crash",
+      "offset": 1048576,
+      "size": 262144
+    },
+    {
+      "name": "crash_syslog",
+      "offset": 1310720,
+      "size": 262144
+    },
+    {
+      "name": "reserved0",
+      "offset": 1572864,
+      "size": 524288
+    },
+    {
+      "name": "kernel_stock",
+      "offset": 2097152,
+      "size": 4194304
+    },
+    {
+      "name": "kernel",
+      "offset": 6291456,
+      "size": 4194304
+    },
+    {
+      "name": "ubi",
+      "offset": 10485760,
+      "size": 123731968
+    }
+  ],
+  "candidate_ubi_merges_stock_filesystems": true
+}

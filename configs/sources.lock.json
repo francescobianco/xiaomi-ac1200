@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/x-wrt/x-wrt.git",
+  "commit": "61de4809b444b7a3d3c0a9cc27c1e0d6702572e4",
+  "kernel": "6.18.60",
+  "profile": "xiaomi_miwifi-r3",
+  "feeds_installed": false,
+  "configuration": "configs/r3-lab.expanded.config",
+  "configuration_sha256": "fe7fe088adb4bb06790e9ec5d6b0a95df8eaa27c18da3b5aae3a4a67312d958c",
+  "source_files_sha256": {
+    "target/linux/ramips/dts/mt7620a_xiaomi_miwifi-r3.dts": "c9158f4b24ede79bb5a18c0d4dc0f4a9fa8c27f408e02591677ad5a8dc5dac97",
+    "target/linux/ramips/files/drivers/mtd/maps/ralink_nand.c": "fc1d63ea164bbfc7243e8b3a63d60d63d0921291941b3d82dc29d3b8cef92c62",
+    "target/linux/ramips/files/drivers/mtd/maps/ralink_nand.h": "daaa1a9738e4bfd313a10ae7550917d9dc70ef94b7e06228c12b76848be4f7db",
+    "target/linux/ramips/patches-6.18/0038-mtd-ralink-add-mt7620-nand-driver.patch": "330b432b36101b3b961251cb4e442735da0c333d1a6ecae5e78abe28ddac3ab2",
+    "target/linux/ramips/image/mt7620.mk": "a8f62324de1000269953f049cc635064673b49ceb03f80f39d7e87eafe2cb590",
+    "target/linux/ramips/mt7620/base-files/lib/upgrade/platform.sh": "0b63d104fbf192f25466fc05975f58aeb017724c56de6fd01c13b12610dce044",
+    "target/linux/generic/kernel-6.18": "d81b55c60f2ffd9cf3b6ed2b5f3d78e4ed307d8a79f31835e1db8f73e5fa898d"
+  },
+  "host_ncurses_package": "libncurses-dev_6.4+20240113-1ubuntu2.2_amd64.deb",
+  "host_ncurses_sha256": "2c32ce182e90e6636ddb037ba2810cace9e1f076b13fac89034277d8ba943c38"
+}

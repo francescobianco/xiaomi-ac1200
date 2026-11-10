@@ -1,0 +1,20 @@
+{
+  "files_verified": 33,
+  "logical_ecc_backup_verified": true,
+  "logical_ecc_bytes": 134217728,
+  "raw_oob_complete": false,
+  "critical_partitions_equal_on_second_read": {
+    "Bootloader": true,
+    "Config": true,
+    "Bdata": true,
+    "Factory": true
+  },
+  "errors": [
+    "Acquisizione raw/OOB fallita sul router; copia raw non disponibile"
+  ],
+  "limitations": [
+    "Acquisizione online: overlay non congelato.",
+    "Raw richiesto con --noecc --oob --bb=dumpbad; semantica del driver vendor da verificare.",
+    "Ripristino non provato; seconda copia su supporto indipendente da creare."
+  ]
+}

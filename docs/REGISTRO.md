@@ -1,0 +1,84 @@
+# Registro del laboratorio
+
+## 2026-11-10 — dossier iniziale
+
+- Ricevuta la trascrizione della sessione precedente.
+- Creati dossier, piano operativo e questo registro.
+- Consultati sorgenti pubblici: individuata anche una patch comunitaria per OpenWrt 22.03.
+- Nessuna operazione di rete o scrittura sul router eseguita in questa sessione.
+- Repository iniziale quasi vuoto; directory `.idea/` preesistente non modificata.
+
+## Dati ancora da acquisire
+
+| Dato | Valore verificato / riferimento locale |
+| --- | --- |
+| Modello da etichetta e revisione | Da acquisire |
+| Firmware e stato configurazione | Verificato via init_info: R3, 2.26.39, CN, inited=0; vedere evidence/2026-11-10-probe.json |
+| SoC, RAM e chip NAND | Da acquisire |
+| Mappa MTD, geometria NAND, ECC | Da acquisire |
+| Bootloader e recovery | Da acquisire |
+| Metodo di accesso e revisione strumento | Da scegliere |
+| Inventario backup e checksum | Da creare |
+| Base firmware, commit, feeds | Da scegliere |
+| Ruolo VPN e prestazioni richieste | Da definire |
+
+## 2026-11-10 — configurazione e accesso software, senza seriale
+
+- Francesco ha autorizzato di proseguire senza seriale per adesso.
+- Completata la configurazione iniziale tramite il flusso del pannello stock: `set_router_normal` ha restituito `code=0`.
+- Creata rete protetta `Xiaomi-R3-Lab` e password distinte casuali di 24 caratteri per Wi-Fi e amministrazione; conservate in `private/credentials.json`, directory 0700 e file 0600, esclusi da Git.
+- Creato profilo NetworkManager `xiaomi-lab`, autoconnect disabilitato, nessuna route predefinita o DNS automatico, IPv6 disabilitato sul solo profilo di laboratorio. Riconnessione riuscita e login con nuova password verificato.
+- Adattata la via `c_upload` / `netspeed` dei progetti xmir-patcher e OpenWRTInvasion. Il ripristino configurazione restituisce 1629, ma una prova successiva ha dimostrato l'esecuzione dello script temporaneo: callback `uid=0` e inventario ricevuto.
+- Il primo tentativo con XML compatto non aveva prodotto callback; mantenendo la struttura multilinea del riferimento e lo script in background la prova è riuscita. La causa precisa non è isolata, perché sono cambiati anche metadati tar e modalità di esecuzione.
+- Confermati kernel stock 2.6.36, MemTotal 124772 KiB, NAND 128 MiB, eraseblock 128 KiB, pagina 2048 byte e OOB 64 byte. [Inventario pubblico depurato](evidence/2026-11-10-root-inventory.json).
+- Non installati SSH/Telnet, non modificata la password root, non eseguiti comandi di modifica NVRAM o bootloader. L'accesso attuale è esecuzione root tramite API amministrativa, non una shell SSH permanente.
+- Acquisita tutta la NAND con ECC: 32 blocchi da 4 MiB (134217728 byte). Dimensioni e MD5 remoto/locali verificati per tutti; SHA-256 locali nel manifest. Dump combinato in `backups/2026-11-10/full-ecc.bin`.
+- Acquisita una seconda lettura dei primi 4 MiB: Bootloader, Config, Bdata e Factory risultano identici byte per byte.
+- Raw/OOB fallito durante il primo blocco: nanddump restituisce errore I/O (`mtd_read`). Copia raw non disponibile; nessun file parziale conteggiato come backup riuscito.
+- La verifica locale restituisce un esito incompleto per il raw e conferma separatamente la validità del backup logico ECC. Ripristino e seconda copia su supporto indipendente restano da predisporre.
+- Ripuliti i file temporanei introdotti sul router; rapporto di cleanup ricevuto via esecuzione root. Nessun server SSH installato; il server di raccolta sul PC è stato chiuso al termine.
+
+## 2026-11-10 — prima verifica diretta
+
+- Dongle già collegato a `xiaomi-setup`, indirizzo 192.168.31.222/24; route predefinita IPv4 sul cavo Ethernet. Nessuna modifica a NetworkManager eseguita.
+- Confermati dal router R3 e firmware 2.26.39; configurazione iniziale ancora da completare.
+- Porte TCP 22, 23 e 122: connessione rifiutata.
+- Salvata evidenza depurata da seriali e identificativi unici; aggiunta sonda ripetibile in `scripts/probe_router.py`.
+- Scaricati ed esaminati, senza eseguirli, sorgenti xmir-patcher a revisione fissata. [Risultati e modifiche previste](ACCESSO.md).
+- Chiesta disponibilità di adattatore UART per definire il recupero.
+- Nessuna autenticazione, configurazione, modifica NVRAM, installazione o acquisizione flash eseguita.
+
+## Modello per le sessioni successive
+
+```text
+Data:
+Obiettivo:
+Stato iniziale e collegamenti:
+Fonti e revisioni strumenti:
+Operazioni eseguite e modifiche persistenti:
+Evidenze / log locali depurati:
+Esito e problemi:
+Ripristino disponibile:
+Prossimo passo e condizioni per procedere:
+```
+
+Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump e dati di fabbrica fuori dai documenti versionati; usare riferimenti locali ai file riservati.
+
+
+## 2026-11-10 — analisi offline e build moderna
+
+- Verificati hash del backup combinato e CRC di header/payload dei due kernel stock, entrambi validi. Bootloader identificato dalle stringhe come U-Boot 1.1.3 del 12 aprile 2016.
+- Clonati in `work/` sorgenti di riferimento storici e X-Wrt attuale. Il checkout X-Wrt conferma supporto R3 e driver NAND per 6.18: corretta la precedente ricognizione web incompleta.
+- Scelta come candidata la revisione `61de4809b444b7a3d3c0a9cc27c1e0d6702572e4`, kernel 6.18.60. Salvati seed, configurazione espansa, lock e inventario checksum degli archivi scaricati.
+- Prerequisiti superati usando header ncurses estratti da un pacchetto Ubuntu nella cartella di lavoro: sudo richiedeva password e non è stato usato per installare pacchetti di sistema.
+- Download della configurazione minima completato; avviata compilazione locale con 8 processi. Log: `work/download.log` e `work/build.log`.
+- Letti senza modificarli i flag di avvio; confermato stock attivo nello slot 0. `sys_kexec_load` coincide con `sys_ni_syscall`: kexec non implementato dal kernel corrente.
+- Il Device Tree standard X-Wrt unifica rootfs0, rootfs1 e overlay in una UBI da 118 MiB. Questa trasformazione richiede un piano di recupero: conservare kernel0 non conserva da solo il sistema stock.
+- Nessun riavvio, cambio NVRAM, flash o sostituzione bootloader eseguito in questa fase.
+
+
+## Passaggio di consegne e pubblicazione richiesta
+
+- Prima compilazione completa terminata con exit code 2, errore host util-linux/ncurses (`cur_term` non dichiarato). Nessuna build completa lasciata attiva.
+- Salvata diagnosi e sequenza di ripresa in `TODO.md`: gli export HOST_EXTRA_* del wrapper sono sovrascritti da rules.mk; il fix resta da applicare e verificare.
+- Francesco ha richiesto di completare TODO.md e fare commit/push del materiale del progetto. Credenziali, dump, checkout/cache di lavoro e impostazioni IDE restano esclusi da Git.

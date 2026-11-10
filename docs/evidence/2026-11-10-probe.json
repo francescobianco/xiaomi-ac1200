@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-11-10T17:43:40.978621+00:00",
+  "source": "http://192.168.31.1/cgi-bin/luci/api/xqsystem/init_info",
+  "info": {
+    "hardware": "R3",
+    "romversion": "2.26.39",
+    "countrycode": "CN",
+    "language": "zh_cn",
+    "inited": 0,
+    "connect": 0,
+    "bound": 0
+  },
+  "management_tcp": {
+    "22": "refused",
+    "23": "refused",
+    "122": "refused"
+  }
+}

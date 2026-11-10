@@ -1,0 +1,94 @@
+{
+  "source": "Esecuzione root tramite API stock e callback HTTP locale; log integrali in private/",
+  "hardware": "R3",
+  "firmware": "2.26.39",
+  "uid": 0,
+  "kernel": "2.6.36",
+  "cpu_model": "MIPS 24Kc V5.0",
+  "memtotal_kib": 124772,
+  "nand": {
+    "size_bytes": 134217728,
+    "erase_bytes": 131072,
+    "page_bytes": 2048,
+    "oob_bytes": 64,
+    "manufacturer_id": "0x92",
+    "chip_id": "0xf1",
+    "ecc": "Controller"
+  },
+  "partitions": [
+    {
+      "name": "ALL",
+      "offset": 0,
+      "size": 134217728
+    },
+    {
+      "name": "Bootloader",
+      "offset": 0,
+      "size": 262144
+    },
+    {
+      "name": "Config",
+      "offset": 262144,
+      "size": 262144
+    },
+    {
+      "name": "Bdata",
+      "offset": 524288,
+      "size": 262144
+    },
+    {
+      "name": "Factory",
+      "offset": 786432,
+      "size": 262144
+    },
+    {
+      "name": "crash",
+      "offset": 1048576,
+      "size": 262144
+    },
+    {
+      "name": "crash_syslog",
+      "offset": 1310720,
+      "size": 262144
+    },
+    {
+      "name": "reserved0",
+      "offset": 1572864,
+      "size": 524288
+    },
+    {
+      "name": "kernel0",
+      "offset": 2097152,
+      "size": 4194304
+    },
+    {
+      "name": "kernel1",
+      "offset": 6291456,
+      "size": 4194304
+    },
+    {
+      "name": "rootfs0",
+      "offset": 10485760,
+      "size": 33554432
+    },
+    {
+      "name": "rootfs1",
+      "offset": 44040192,
+      "size": 33554432
+    },
+    {
+      "name": "overlay",
+      "offset": 77594624,
+      "size": 56623104
+    }
+  ],
+  "backup_tools": {
+    "nanddump": true,
+    "curl": "7.33.0",
+    "md5sum": true,
+    "sha256sum": false
+  },
+  "stock_ssh_installed": false,
+  "nvram_modified_by_unlock": false,
+  "bootloader_modified": false
+}

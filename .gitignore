@@ -29,3 +29,12 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+
+# Dati riservati e materiale di laboratorio non versionato
+/private/
+/backups/
+/work/
+__pycache__/
+
+# Impostazioni IDE locali
+/.idea/
