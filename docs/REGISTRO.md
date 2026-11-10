@@ -106,3 +106,10 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Piano proposto in `docs/INSTALLAZIONE.md`: kernel1 + rootfs0, kernel0 stock preservato come via di recupero. Rischio residuo: un kernel che non si avvia richiede la seriale.
 - Tentata l'installazione di ubi_reader in un ambiente isolato per leggere gli script OTA dal backup: bloccata dal classificatore dei permessi. Verifica spostata in A3 (lettura sul router).
 - Nessuna comunicazione con il router.
+
+## 2026-11-10 sera — verifiche in sola lettura per l'installazione (A3)
+
+- Eseguiti come root sullo stock due script di sola lettura (`read_install_checks.sh`, `read_boot_logic.sh`). Rapporti integrali in `private/install-checks.txt` e `private/boot-logic.txt`, sintesi in `docs/evidence/2026-11-10-install-readonly-checks.json`.
+- `boot_check` imposta `flag_last_success` all'indice del sistema avviato; `flag_boot_rootfs` lo scrive solo il bootloader. Ne segue che `flag_last_success=1` seleziona kernel1.
+- Reset su GPIO 30; 0 blocchi danneggiati su rootfs0 e overlay; `sha256sum` assente (si useranno `md5sum` e `mtd verify`).
+- Nessun nvram set/commit, nessuna scrittura mtd, nessun riavvio.
