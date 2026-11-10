@@ -40,6 +40,10 @@ L'etichetta `read-only` del Device Tree è utile nel sistema nuovo ma non prova 
 
 Una seconda copia del backup su supporto indipendente resta da creare. Una copia aggiuntiva sullo stesso SSD non soddisfa questo requisito. Il dump raw/OOB è incompleto e il comportamento del driver vendor va chiarito; non presentare il dump logico come immagine raw pronta da riscrivere con un programmatore.
 
+## Aggiornamento
+
+L'analisi del 10 novembre sera ha trovato la recovery USB nell'initramfs dei kernel stock. Piano completo in [INSTALLAZIONE.md](INSTALLAZIONE.md).
+
 ## Condizioni prima del flash
 
 La scheda di installazione deve indicare immagine e hash, dimensioni controllate, layout effettivo, partizioni coinvolte, modifiche ai flag e recupero previsto. Se resta necessario accettare il rischio di un recupero tramite seriale, va descritto concretamente insieme all'immagine pronta: l'autorizzazione a proseguire senza seriale non rende un fallback non provato affidabile.

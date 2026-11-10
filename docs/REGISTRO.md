@@ -98,3 +98,11 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Seed e lock aggiornati; overlay `configs/files/` e chiave da `private/` inseriti dal wrapper.
 - Build `-j12` staccata dalla sessione: exit 0 alle 19:41. Immagini, rootfs e Image Builder verificati (evidenze in `docs/evidence/2026-11-10-build-wireguard.json`).
 - Nessuna comunicazione con il router, nessun flash.
+
+## 2026-11-10 sera — piano di installazione e recupero
+
+- Analisi offline del backup: il bootloader offre solo il menu TFTP via seriale. La recovery USB di Xiaomi sta nell'initramfs dei kernel stock (reset all'avvio o chiavetta `miusbkit`, firmware firmato RSA) e riscrive tutte le partizioni di sistema.
+- Config è un ambiente U-Boot con CRC valido; `uboot-envtools` di X-Wrt lo gestisce su mtd1.
+- Piano proposto in `docs/INSTALLAZIONE.md`: kernel1 + rootfs0, kernel0 stock preservato come via di recupero. Rischio residuo: un kernel che non si avvia richiede la seriale.
+- Tentata l'installazione di ubi_reader in un ambiente isolato per leggere gli script OTA dal backup: bloccata dal classificatore dei permessi. Verifica spostata in A3 (lettura sul router).
+- Nessuna comunicazione con il router.

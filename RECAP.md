@@ -1,7 +1,7 @@
 # RECAP — ripresa sessione da remoto (10 novembre 2026, aggiornato 19:38)
 
 > **AGGIORNAMENTO 19:45 — SECONDA BUILD RIUSCITA (exit 0 alle 19:41) e verificata; documentazione, commit e push fatti.**
-> Prossimo passo: piano di installazione e recupero (TODO.md). Nessun flash eseguito.
+> **19:55 — Piano di installazione e recupero scritto in `docs/INSTALLAZIONE.md` (proposta).** Prossimo passo: fase A (preparazione). Nessun flash eseguito.
 >
 > Storico della seconda build (WireGuard + chiave SSH + Image Builder):
 > Decisione di Francesco: aggiungere WireGuard, accesso SSH con chiave e Image Builder; LuCI per ora no.

@@ -12,7 +12,8 @@ Il nome della cartella conserva la descrizione iniziale «AC1200», che identifi
 - [Verifica diretta e analisi della via di accesso](docs/ACCESSO.md)
 - [Build moderna X-Wrt e sorgenti fissati](docs/BUILD.md)
 - [Analisi del recupero e dei layout](docs/RECUPERO.md)
+- [Piano di installazione e recupero (proposta)](docs/INSTALLAZIONE.md)
 
 **Stato al 10 novembre 2026:** configurazione stock completata e accesso root tramite API dimostrato, senza seriale. Copia logica con ECC della NAND (128 MiB) acquisita e verificata; lettura raw/OOB fallita. SSH non installato; firmware, bootloader e parametri NVRAM non modificati dalla procedura di accesso. Internet del PC resta sul cavo.
 
-Base candidata scelta: X-Wrt, kernel 6.18.60. **Build locale riuscita con WireGuard, SSH solo con chiave e Image Builder** (immagini R3 con checksum e CRC verificati, LAN 192.168.15.1, senza LuCI). Prossimo traguardo: piano di installazione e recupero. Nessuna immagine ancora installata. Credenziali in `private/`, dump in `backups/`, entrambi esclusi da Git.
+Base candidata scelta: X-Wrt, kernel 6.18.60. **Build locale riuscita con WireGuard, SSH solo con chiave e Image Builder** (immagini R3 con checksum e CRC verificati, LAN 192.168.15.1, senza LuCI). Piano di installazione e recupero proposto in docs/INSTALLAZIONE.md; prossimo traguardo: la fase A di preparazione. Nessuna immagine ancora installata. Credenziali in `private/`, dump in `backups/`, entrambi esclusi da Git.
