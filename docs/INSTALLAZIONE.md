@@ -61,7 +61,7 @@ Non si usano `factory.bin` (formato non accettato dal pannello Xiaomi) né `bree
 
 ### Fase A — preparazione, nessuna modifica al router
 
-- [ ] **A1. Seconda copia del backup** su un supporto indipendente (chiavetta, disco esterno o NAS), poi verifica con `sha256sum -c`.
+- [x] **A1. Seconda copia del backup** (10/11/2026 20:25). Pacchetto `xiaomi-r3-backup-2026-11-10.tar` (293 MB, SHA-256 `83c95be131e01186af8f82c07aa40b8db0c1a2f3e33be2baadf0d85f948e4ca3`), con backup NAND, firmware stock e hash, copiato con rsync sul **PC di casa di Francesco** (macchina e luogo diversi). Verifica `sha256sum -c` eseguita lì: OK. Prima dell'export sono stati ricontrollati gli hash locali. I NAS dell'ufficio richiedono credenziali: copia facoltativa in futuro.
 - [x] **A2. Firmware ufficiale R3 firmato**: scaricato `miwifi_r3_firmware_4accc_2.26.39.bin` (la versione installata) dal server OTA Xiaomi, salvato in `work/stock-firmware/` con hash in `configs/stock-firmware.sha256`. Verifiche: CRC dell'header valido; kernel identico byte per byte al kernel0 del backup; **firma RSA-2048/SHA-1 valida** con la chiave pubblica dello stock (lo stesso controllo della recovery); nessun `uboot.bin` all'interno. Evidenze in [evidence/2026-11-10-stock-firmware.json](evidence/2026-11-10-stock-firmware.json).
   - [ ] Resta da preparare la **chiavetta**: FAT32, una sola partizione, il file `.bin` nella radice. Va fatto di persona.
 - [x] **A3. Verifiche in sola lettura sul router stock** (10/11/2026; `scripts/read_install_checks.sh` e `scripts/read_boot_logic.sh`; evidenze in [evidence/2026-11-10-install-readonly-checks.json](evidence/2026-11-10-install-readonly-checks.json)). Nessuna modifica al router.

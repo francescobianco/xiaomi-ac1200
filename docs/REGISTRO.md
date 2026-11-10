@@ -121,3 +121,9 @@ Registrare solo risultati osservati. Tenere credenziali, token, chiavi VPN, dump
 - Aggiunta all'immagine la radio a 2,4 GHz accesa in WPA2 al primo avvio, per raggiungere il router dal dongle. Terza build riuscita e verificata.
 - Profilo NetworkManager `xwrt-lab`: polkit nega la creazione da SSH, preparato `scripts/setup_pc_xwrt_network.sh` da lanciare con sudo.
 - Nessuna modifica al router.
+
+## 2026-11-10 sera — seconda copia del backup (A1)
+
+- Ricontrollati gli hash locali del backup NAND e del firmware stock, poi creato il pacchetto `work/a1-export/xiaomi-r3-backup-2026-11-10.tar` (SHA-256 `83c95be1…4ca3`).
+- Francesco l'ha copiato con rsync, via VPN, sul suo PC di casa e l'ha verificato con `sha256sum -c`: OK.
+- NAS dell'ufficio (Synology .88, Fritz .1): accesso negato senza credenziali, copia rimandata.
